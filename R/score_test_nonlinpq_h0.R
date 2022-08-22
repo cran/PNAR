@@ -8,6 +8,8 @@ score_test_nonlinpq_h0 <- function(b, y, W, p, d, Z = NULL) {
     if ( min(Z) < 0 ) {
       stop('The matrix of covariates Z contains negative values.')
     }
+    Z <- model.matrix(~., as.data.frame(Z))
+    Z <- Z[1:dim(y)[1], -1, drop = FALSE]
   }
 
   W <- W / Rfast::rowsums(W)

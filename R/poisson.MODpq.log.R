@@ -5,6 +5,11 @@ poisson.MODpq.log <- function(b, W, p, Z = NULL, TT, N, copula = "gaussian",
     stop('The adjacency matrix W contains negative values.')
   }
 
+  if ( !is.null(Z) ) {
+    Z <- model.matrix( ~., as.data.frame(Z) )
+    Z <- Z[1:N, -1, drop = FALSE]
+  }
+
   n <- 100
   W <- W / Rfast::rowsums(W)
   W[ is.na(W) ] <- 0

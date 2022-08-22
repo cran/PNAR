@@ -1,4 +1,4 @@
-\name{Random number generation of copula functions}
+\name{rcopula}
 \alias{rcopula}
 
 \title{

@@ -1,4 +1,4 @@
-\name{Bound p-value for testing for smooth transition effects on PNAR(p) model}
+\name{score_test_stnarpq_DV}
 \alias{score_test_stnarpq_DV}
 
 \title{

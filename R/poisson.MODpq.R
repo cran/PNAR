@@ -9,6 +9,8 @@ poisson.MODpq <- function(b, W, p, Z = NULL, TT, N, copula = "gaussian",
     if ( min(Z) < 0 ) {
       stop('The matrix of covariates Z contains negative values.')
     }
+    Z <- model.matrix( ~., as.data.frame(Z) )
+    Z <- Z[1:N, -1, drop = FALSE]
   }
 
   n <- 100

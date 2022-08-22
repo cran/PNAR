@@ -1,4 +1,4 @@
-\name{Estimation of the linear Poisson NAR(p) model}
+\name{lin_estimnarpq}
 \alias{lin_estimnarpq}
 
 \title{

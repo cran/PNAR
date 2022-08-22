@@ -34,15 +34,9 @@ global_optimise_LM_stnarpq <- function(gama_L = NULL, gama_U = NULL, len = 10, b
     if ( min(Z) < 0 ) {
       stop('The matrix of covariates Z contains negative values.')
     }
+    Z <- model.matrix(~., as.data.frame(Z))
+    Z <- Z[1:dim(y)[1], -1, drop = FALSE]
   }
-
-  gami <- supLMi <- numeric(len)
-  if ( is.null(gama_L) |  is.null(gama_U) ) {
-    x <- mean(W %*% y)
-    gama_L <-  -log(0.9) / x^2
-    gama_U <-  -log(0.1) / x^2
-  }
-  x <- seq(gama_L, gama_U, length = len)
 
   W <- W / Rfast::rowsums(W)
   W[ is.na(W) ] <- 0
@@ -65,6 +59,20 @@ global_optimise_LM_stnarpq <- function(gama_L = NULL, gama_U = NULL, len = 10, b
   H <- crossprod(wy1 * ct, wy1)
   solveHmp <- solve(H)  ## solve( H[ 1:(m - p), 1:(m - p) ] )
   k <- rep( 1:c(TT - p), each = N )
+
+  gami <- supLMi <- numeric(len)
+  if ( is.null(gama_L) &  is.null(gama_U) ) {
+    x <- mean(z)
+    gama_L <-  -log(0.9) / x^2
+    gama_U <-  -log(0.1) / x^2
+  } else if ( is.null(gama_L) &  !is.null(gama_U) ) {
+    x <- mean(z)
+    gama_L <-  -log(0.9) / x^2
+  } else if ( !is.null(gama_L) &  is.null(gama_U) ) {
+    x <- mean(z)
+    gama_U <-  -log(0.1) / x^2
+  }
+  x <- seq(gama_L, gama_U, length = len)
 
   for( i in 1:(len - 1) ) {
     opt <- optimise(.LM_gama_stnarpq, c( x[i], x[i + 1] ), b = b, p = p, m = m, z2 = z2, wy1 = wy1,

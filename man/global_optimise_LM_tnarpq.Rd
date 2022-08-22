@@ -1,4 +1,4 @@
-\name{Optimization of the score test statistic for the T-PNAR(p) model}
+\name{global_optimise_LM_tnarpq}
 \alias{global_optimise_LM_tnarpq}
 
 \title{
@@ -73,7 +73,7 @@ the time sample \eqn{t=1,...,TT}
 where \eqn{X_{i,t}=\sum_{j=1}^{N} W_{ij}Y_{j,t}} is the network effect, i.e. the weighted average impact of node \eqn{i}
 connections, with the weights of the mean being \eqn{W_{ij}}, the single element of the network matrix \eqn{W}, and \eqn{I()} is the indicator function. The sequence \eqn{\lambda_{t}} is the expectation of \eqn{Y_{t}} conditional to its past values.
 
-The null hypothesis of the test is defined as \eqn{H_{0}: \alpha_{11}=...=\alpha_{2p}=0}, versus the alternative that at least one among \eqn{\alpha_{s,h}} is not \eqn{0}, for \eqn{s=1,2}. The test statistic has the form
+The null hypothesis of the test is defined as \eqn{H_{0}: \alpha_{0}=\alpha_{11}=...=\alpha_{2p}=0}, versus the alternative that at least one among \eqn{\alpha_{s,h}} is not \eqn{0}, for \eqn{s=0,1,2}. The test statistic has the form
 \deqn{
 LM(\gamma)=S^{'}(\hat{\theta},\gamma)\Sigma^{-1}(\hat{\theta},\gamma)S(\hat{\theta},\gamma)
 }

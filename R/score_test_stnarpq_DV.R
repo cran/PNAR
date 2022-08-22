@@ -8,30 +8,20 @@ score_test_stnarpq_DV <- function(b, y, W, p, d, Z = NULL, gama_L = NULL, gama_U
     if ( min(Z) < 0 ) {
       stop('The matrix of covariates Z contains negative values.')
     }
-  }
-
-  if ( is.null(gama_L) |  is.null(gama_U) ) {
-    x <- mean(W %*% y)
-    gama_L <-  -log(0.9) / x^2
-    gama_U <-  -log(0.1) / x^2
+    Z <- model.matrix(~., as.data.frame(Z))
+    Z <- Z[1:dim(y)[1], -1, drop = FALSE]
   }
 
   W <- W / Rfast::rowsums(W)
   W[ is.na(W) ] <- 0
 
   dm <- dim(y)   ;    N <- dm[1]    ;    TT <- dm[2]
-
   dimz <- ( !is.null(Z) ) * NCOL(Z)
   m <- 1 + 3 * p + max(0, dimz)
   b[ (m - p + 1):m ] <- 0
 
-  LMv <- numeric(len)
-  gam <- seq(from = gama_L, to = gama_U, length = len)
-  V <- 0
-
   z <- W %*% y
   z2 <- z^2
-
   wy1 <- NULL
   for ( ti in (p + 1):TT )
     wy1 <- rbind( wy1, cbind(z[, (ti - 1):(ti - p)], y[, (ti - 1):(ti - p)], Z) )
@@ -42,11 +32,26 @@ score_test_stnarpq_DV <- function(b, y, W, p, d, Z = NULL, gama_L = NULL, gama_U
   ct <- as.vector( y[, -c(1:p)] ) / lambdat^2
   k <- rep( 1:c(TT - p), each = N )
 
+  if ( is.null(gama_L) &  is.null(gama_U) ) {
+    x <- mean(z)
+    gama_L <-  -log(0.9) / x^2
+    gama_U <-  -log(0.1) / x^2
+  } else if ( is.null(gama_L) &  !is.null(gama_U) ) {
+    x <- mean(z)
+    gama_L <-  -log(0.9) / x^2
+  } else if ( !is.null(gama_L) &  is.null(gama_U) ) {
+    x <- mean(z)
+    gama_U <-  -log(0.1) / x^2
+  }
+  gam <- seq(from = gama_L, to = gama_U, length = len)
 
   wy2 <- NULL
   f <- exp(-gam[1] * z2)
   for ( ti in (p + 1):TT )  wy2 <- rbind( wy2, z[, (ti - 1):(ti - p), drop = FALSE] * f[, (ti - d)] )
   wy <- cbind(wy1, wy2)
+
+  LMv <- numeric(len)
+  V <- 0
 
   ## scor
   a <- wy * com

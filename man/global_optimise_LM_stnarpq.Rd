@@ -1,4 +1,4 @@
-\name{Optimization of the score test statistic for the ST-PNAR(p) model}
+\name{global_optimise_LM_stnarpq}
 \alias{global_optimise_LM_stnarpq}
 
 \title{

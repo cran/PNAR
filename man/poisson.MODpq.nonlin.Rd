@@ -1,4 +1,4 @@
-\name{Generation of counts from a non-linear Intercept Drift Poisson NAR(p) model}
+\name{poisson.MODpq.nonlin}
 \alias{poisson.MODpq.nonlin}
 
 \title{

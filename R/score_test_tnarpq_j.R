@@ -23,6 +23,7 @@
 }
 
 
+
 score_test_tnarpq_j <- function(supLM, b, y, W, p, d, Z = NULL, J = 499, gama_L = NULL, gama_U = NULL, tol = 1e-9, ncores = 1) {
 
  if ( min(W) < 0 ) {
@@ -33,6 +34,8 @@ score_test_tnarpq_j <- function(supLM, b, y, W, p, d, Z = NULL, J = 499, gama_L 
     if ( min(Z) < 0 ) {
       stop('The matrix of covariates Z contains negative values.')
     }
+    Z <- model.matrix(~., as.data.frame(Z))
+    Z <- Z[1:dim(y)[1], -1, drop = FALSE]
   }
 
   W <- W / Rfast::rowsums(W)
@@ -45,13 +48,6 @@ score_test_tnarpq_j <- function(supLM, b, y, W, p, d, Z = NULL, J = 499, gama_L 
 
   supLMj <- gamaj <- pval <- numeric(J)
   z <- W %*% y
-
-  if ( is.null(gama_L) | is.null(gama_U) ) {
-    qq2 <- Rfast2::rowQuantile( z, probs = c(0.2, 0.8) )
-    g <- Rfast::colmeans(qq2)
-    gama_L <- g[1]   ;   gama_U <- g[2]
-  }
-
   wy1 <- NULL
   for ( ti in (p + 1):TT )  wy1 <- rbind( wy1, cbind( z[, (ti - 1):(ti - p)], y[, (ti - 1):(ti - p)], Z, z[, ti - d] ) )
   zf <- wy1[, dim(wy1)[2]]
@@ -63,6 +59,20 @@ score_test_tnarpq_j <- function(supLM, b, y, W, p, d, Z = NULL, J = 499, gama_L 
   H <- crossprod(wy1 * ct, wy1)
   solveHmpp <- solve(H)
 
+  if ( is.null(gama_L)  &  is.null(gama_U) ) {
+    qq2 <- Rfast2::rowQuantile( z, probs = c(0.2, 0.8) )
+    g <- Rfast::colmeans(qq2)
+    gama_L <- max(g[1], 0.01)   ;   gama_U <- g[2]
+  } else  if ( is.null(gama_L)  &  !is.null(gama_U) ) {
+    qq2 <- Rfast2::rowQuantile( z, probs = c(0.2, 0.8) )
+    g <- Rfast::colmeans(qq2)
+    gama_L <- max(g[1], 0.01)
+  } else  if ( !is.null(gama_L)  &  is.null(gama_U) ) {
+    qq2 <- Rfast2::rowQuantile( z, probs = c(0.2, 0.8) )
+    g <- Rfast::colmeans(qq2)
+    gama_U <- g[2]
+  }
+
   msn <- Rfast::matrnorm(TT, J)
   rows <- rep( (p + 1):TT, each = N )
   msn <- msn[rows, ]
@@ -70,22 +80,32 @@ score_test_tnarpq_j <- function(supLM, b, y, W, p, d, Z = NULL, J = 499, gama_L 
 
   if ( ncores == 1 ) {
     for ( j in 1:J ) {
-      opttj <- optimise( .LM_gama_tnarpq_j, c(gama_L, gama_U), b = b, p = p, zf = zf, wy1 = wy1, com = com,
-                         ct = ct, k = k, m = m, pp = pp, solveHmpp = solveHmpp, msn = msn[, j] )
+      opttj <- try( optimise( .LM_gama_tnarpq_j, c(gama_L, gama_U), b = b, p = p, zf = zf, wy1 = wy1, com = com,
+                         ct = ct, k = k, m = m, pp = pp, solveHmpp = solveHmpp, msn = msn[, j] ), silent = TRUE )
+      vim <- 1
+      while ( identical(class(opttj), "try-error") ) {
+	      opttj <- try( optimise( .LM_gama_tnarpq_j, c(gama_L + 0.01 * vim, gama_U), b = b, p = p, zf = zf, wy1 = wy1, com = com,
+                      ct = ct, k = k, m = m, pp = pp, solveHmpp = solveHmpp, msn = msn[, j] ), silent = TRUE )
+        vim <- vim + 1
+	    }
       gamaj[j] <- opttj$minimum
       supLMj[j] <-  -opttj$objective
       pval[j] <- ( supLMj[j] >= supLM )
     }
 
   } else {
-    suppressWarnings()
     requireNamespace("doParallel", quietly = TRUE, warn.conflicts = FALSE)
     cl <- parallel::makePSOCKcluster(ncores)
     doParallel::registerDoParallel(cl)
     mod <- foreach(j = 1:J, .combine = rbind, .export = ".LM_gama_tnarpq_j", .packages = "Rfast" ) %dopar% {
-      opttj <- optimise( .LM_gama_tnarpq_j, c(gama_L, gama_U), b = b, p = p, zf = zf, wy1 = wy1, com = com,
-                         ct = ct, k = k, m = m, pp = pp, solveHmpp = solveHmpp, msn = msn[, j] )
-
+      opttj <- try( optimise( .LM_gama_tnarpq_j, c(gama_L, gama_U), b = b, p = p, zf = zf, wy1 = wy1, com = com,
+                         ct = ct, k = k, m = m, pp = pp, solveHmpp = solveHmpp, msn = msn[, j] ), silent = TRUE )
+      vim <- 1
+      while ( identical(class(opttj), "try-error") ) {
+        opttj <- try( optimise( .LM_gama_tnarpq_j, c(gama_L + 0.01 * vim, gama_U), b = b, p = p, zf = zf, wy1 = wy1, com = com,
+                                ct = ct, k = k, m = m, pp = pp, solveHmpp = solveHmpp, msn = msn[, j] ), silent = TRUE )
+        vim <- vim + 1
+      }
       gamaj <- opttj$minimum
       supLMj <-  -opttj$objective
       pval <- ( supLMj >= supLM )
@@ -95,6 +115,7 @@ score_test_tnarpq_j <- function(supLM, b, y, W, p, d, Z = NULL, J = 499, gama_L 
     gamaj <- mod[, 1]
     supLMj <- mod[, 2]
     pval <- mod[, 3]
+
   }
 
   pJ <- sum(pval) / J

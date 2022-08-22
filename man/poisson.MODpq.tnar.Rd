@@ -1,4 +1,4 @@
-\name{Generation of counts from a non-linear Threshold Poisson NAR(p) model}
+\name{poisson.MODpq.tnar}
 \alias{poisson.MODpq.tnar}
 
 \title{

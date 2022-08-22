@@ -46,7 +46,7 @@
 .scor_logpq <- function(b, N, TT, y, W, wy, p, Z) {
   nut <- as.vector( wy %*% b)
   a <-  - Rfast::eachcol.apply(wy, as.vector( y[, -c(1:p)] ) - exp(nut) )
-  matrix(a, 2 * p + 1, 1)
+  matrix(a, 2 * p + 1 + max( 0, ncol(Z) ), 1)
 }
 
 ################################################################################
@@ -86,7 +86,7 @@
   ## scor
   nut <- as.vector( wy %*% b)
   a <- wy * ( as.vector( y[, -c(1:p)] ) - exp(nut) )
-  scor <- matrix( - Rfast::colsums(a), 2 * p + 1, 1)
+  scor <- matrix( - Rfast::colsums(a), 2 * p + 1 + max( 0, ncol(Z) ), 1)
 
   ## hess
   nut <- as.vector( wy %*% b )
@@ -128,6 +128,11 @@ log_lin_estimnarpq <- function(y, W, p, Z = NULL) {
 
   if ( min(W) < 0 ) {
     stop('The adjacency matrix W contains negative values.')
+  }
+
+  if ( !is.null(Z) ) {
+    Z <- model.matrix( ~., as.data.frame(Z) )
+    Z <- Z[1:dim(y)[1], -1, drop = FALSE]
   }
 
   W <- W / Rfast::rowsums(W)

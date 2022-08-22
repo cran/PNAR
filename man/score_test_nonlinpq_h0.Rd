@@ -1,4 +1,4 @@
-\name{Linearity test against non-linear ID-PNAR(p) model}
+\name{score_test_nonlinpq_h0}
 \alias{score_test_nonlinpq_h0}
 
 \title{

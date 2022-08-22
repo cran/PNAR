@@ -1,4 +1,4 @@
-\name{Bootstrap test for smooth transition effects on PNAR(p) model}
+\name{score_test_stnarpq_j}
 \alias{score_test_stnarpq_j}
 
 \title{

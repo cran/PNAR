@@ -1,4 +1,4 @@
-\name{Generation of counts from a linear Poisson NAR(p) model}
+\name{poisson.MODpq}
 \alias{poisson.MODpq}
 
 \title{

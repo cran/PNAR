@@ -1,4 +1,4 @@
-\name{Generation of counts from a log-linear Poisson NAR(p) model}
+\name{poisson.MODpq.log}
 \alias{poisson.MODpq.log}
 
 \title{

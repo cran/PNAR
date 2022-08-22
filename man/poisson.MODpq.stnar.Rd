@@ -1,4 +1,4 @@
-\name{Generation of counts from a non-linear Smooth Transition Poisson NAR(p) model}
+\name{poisson.MODpq.stnar}
 \alias{poisson.MODpq.stnar}
 
 \title{

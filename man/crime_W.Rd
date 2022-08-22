@@ -1,4 +1,4 @@
-\name{Network matrix for Chicago crime dataset}
+\name{crime_W}
 \alias{crime_W}
 \docType{data}
 \title{

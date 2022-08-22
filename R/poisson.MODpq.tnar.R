@@ -9,6 +9,8 @@ poisson.MODpq.tnar <- function(b, W, gama, a, p, d, Z = NULL, TT, N, copula = "g
     if ( min(Z) < 0 ) {
       stop('The matrix of covariates Z contains negative values.')
     }
+    Z <- model.matrix( ~., as.data.frame(Z) )
+    Z <- Z[1:N, -1, drop = FALSE]
   }
 
   n <- 100

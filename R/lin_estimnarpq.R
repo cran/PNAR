@@ -41,7 +41,7 @@
 .scor_linpq <- function(b, N, TT, y, W, wy, p, Z) {
   lambdat <- as.vector( wy %*% b)
   a <-  - Rfast::eachcol.apply(wy, ( as.vector(y[, -c(1:p)]) - lambdat ) / lambdat )
-  matrix(a, 2 * p + 1, 1)
+  matrix(a, 2 * p + 1 + max( 0, ncol(Z) ), 1)
 }
 
 ################################################################################
@@ -81,7 +81,7 @@
   ## scor
   lambdat <- as.vector( wy %*% b)
   a <- wy * ( as.vector(y[, -c(1:p)]) - lambdat ) / lambdat
-  scor <- matrix( - Rfast::colsums(a), 2 * p + 1, 1 )
+  scor <- matrix( - Rfast::colsums(a), 2 * p + 1 + max( 0, ncol(Z) ), 1 )
 
   ## hess
   ct <- as.vector(y[, -(1:p)]) / lambdat^2
@@ -129,6 +129,8 @@ lin_estimnarpq <- function(y, W, p, Z = NULL) {
     if ( min(Z) < 0 ) {
       stop('The matrix of covariates Z contains negative values.')
     }
+    Z <- model.matrix(~., as.data.frame(Z))
+    Z <- Z[1:dim(y)[1], -1, drop = FALSE]
   }
 
   W <- W / Rfast::rowsums(W)

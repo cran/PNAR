@@ -33,6 +33,8 @@ score_test_stnarpq_j <- function(supLM, b, y, W, p, d, Z = NULL, J = 499, gama_L
     if ( min(Z) < 0 ) {
       stop('The matrix of covariates Z contains negative values.')
     }
+    Z <- model.matrix(~., as.data.frame(Z))
+    Z <- Z[1:dim(y)[1], -1, drop = FALSE]
   }
 
   W <- W / Rfast::rowsums(W)
@@ -57,9 +59,15 @@ score_test_stnarpq_j <- function(supLM, b, y, W, p, d, Z = NULL, J = 499, gama_L
   H <- crossprod(wy1 * ct, wy1)
   solveHmp <- solve(H)  ## solve( H[ 1:(m - p), 1:(m - p) ] )
 
-  if ( is.null(gama_L) |  is.null(gama_U) ) {
+  if ( is.null(gama_L) &  is.null(gama_U) ) {
     x <- mean(z)
     gama_L <-  -log(0.9) / x^2
+    gama_U <-  -log(0.1) / x^2
+  } else if ( is.null(gama_L) &  !is.null(gama_U) ) {
+    x <- mean(z)
+    gama_L <-  -log(0.9) / x^2
+  } else if ( !is.null(gama_L) &  is.null(gama_U) ) {
+    x <- mean(z)
     gama_U <-  -log(0.1) / x^2
   }
 
@@ -78,7 +86,7 @@ score_test_stnarpq_j <- function(supLM, b, y, W, p, d, Z = NULL, J = 499, gama_L
     }
 
   } else {
-    suppressWarnings()
+    suppressWarnings({
     requireNamespace("doParallel", quietly = TRUE, warn.conflicts = FALSE)
     cl <- parallel::makePSOCKcluster(ncores)
     doParallel::registerDoParallel(cl)
@@ -94,6 +102,7 @@ score_test_stnarpq_j <- function(supLM, b, y, W, p, d, Z = NULL, J = 499, gama_L
     gamaj <- mod[, 1]
     supLMj <- mod[, 2]
     pval <- mod[, 3]
+    })
   }
 
   pJ <- sum(pval) / J

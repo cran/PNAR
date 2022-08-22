@@ -1,4 +1,4 @@
-\name{Generation of a network from the Stochastic Block Model}
+\name{adja}
 \alias{adja}
 \title{
 Generation of a network from the Stochastic Block Model

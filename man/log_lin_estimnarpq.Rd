@@ -1,4 +1,4 @@
-\name{Estimation of the log-linear Poisson NAR(p) model}
+\name{log_lin_estimnarpq}
 \alias{log_lin_estimnarpq}
 
 \title{

@@ -1,4 +1,4 @@
-\name{Chicago crime dataset}
+\name{crime}
 \alias{crime}
 \docType{data}
 \title{

@@ -1,4 +1,4 @@
-\name{Generation of a network from the Erdos-Renyi model}
+\name{adja_gnp}
 \alias{adja_gnp}
 \title{
 Generation of a network from the Erdos-Renyi model

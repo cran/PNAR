@@ -22,6 +22,8 @@
   - as.numeric( crossprod( S[ (m - pp + 1):m ], solve( Sigma, S[ (m - pp + 1):m ] ) ) )
 }
 
+
+
 global_optimise_LM_tnarpq <- function(gama_L = NULL, gama_U = NULL, len = 10, b, y, W, p, d, Z = NULL, tol = 1e-9) {
 
   if ( min(W) < 0 ) {
@@ -32,21 +34,13 @@ global_optimise_LM_tnarpq <- function(gama_L = NULL, gama_U = NULL, len = 10, b,
     if ( min(Z) < 0 ) {
       stop('The matrix of covariates Z contains negative values.')
     }
+    Z <- model.matrix(~., as.data.frame(Z))
+    Z <- Z[1:dim(y)[1], -1, drop = FALSE]
   }
-
-  gami <- supLMi <- numeric(len)
-  if ( is.null(gama_L) | is.null(gama_U) ) {
-    X <- W %*% y
-    qq2 <- Rfast2::rowQuantile( X, probs = c(0.2, 0.8) )
-    g <- Rfast::colmeans(qq2)
-    gama_L <- g[1]   ;   gama_U <- g[2]
-  }
-  x <- seq(gama_L, gama_U, length = len)
 
   W <- W / Rfast::rowsums(W)
   W[ is.na(W) ] <- 0
   dm <- dim(y)    ;    N <- dm[1]    ;    TT <- dm[2]
-
   pp <- 1 + 2 * p
   dimz <- ( !is.null(Z) ) * NCOL(Z)
   m <- 2 * pp + max(0, dimz)
@@ -64,11 +58,39 @@ global_optimise_LM_tnarpq <- function(gama_L = NULL, gama_U = NULL, len = 10, b,
   solveHmpp <- solve(H)
   k <- rep( 1:c(TT - p), each = N )
 
+  nullgama_L <- is.null(gama_L) 
+  gami <- supLMi <- numeric(len - 1)
+  if ( is.null(gama_L)  &  is.null(gama_U) ) {
+    qq2 <- Rfast2::rowQuantile( z, probs = c(0.2, 0.8) )
+    g <- Rfast::colmeans(qq2)
+    gama_L <- max(g[1], 0.01)   ;   gama_U <- g[2]
+  } else  if ( is.null(gama_L)  &  !is.null(gama_U) ) {
+    qq2 <- Rfast2::rowQuantile( z, probs = c(0.2, 0.8) )
+    g <- Rfast::colmeans(qq2)
+    gama_L <- max(g[1], 0.01)
+  } else  if ( !is.null(gama_L)  &  is.null(gama_U) ) {
+    qq2 <- Rfast2::rowQuantile( z, probs = c(0.2, 0.8) )
+    g <- Rfast::colmeans(qq2)
+    gama_U <- g[2]
+  }
+  x <- seq(gama_L, gama_U, length = len)
+
   for( i in 1:(len - 1) ) {
-    opt <- optimise( .LM_gama_tnarpq, c( x[i], x[i + 1] ), b = b, p = p, zf = zf, wy1 = wy1,
-                     com = com, ct = ct, k = k, m = m, pp = pp, solveHmpp = solveHmpp )
-    gami[i] <- opt$minimum
-    supLMi[i] <- opt$objective
+
+    opt <- try( optimise( .LM_gama_tnarpq, c( x[i], x[i + 1] ), b = b, p = p, zf = zf, wy1 = wy1,
+                     com = com, ct = ct, k = k, m = m, pp = pp, solveHmpp = solveHmpp ), silent = TRUE )
+    if ( identical(class(opt), "try-error") ) {
+      gami[i] <- NA
+      supLMi[i] <- Inf
+    } else {
+      gami[i] <- opt$minimum
+      supLMi[i] <- opt$objective
+    }
+  }
+
+  if ( !nullgama_L ) {
+    a <- min(gami, na.rm = TRUE)
+    warning( paste("The minimum of the gamma values considered is", a) )
   }
 
   supLM <- min(supLMi)

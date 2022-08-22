@@ -1,4 +1,4 @@
-\name{Count the number of events within a specified time}
+\name{getN}
 \alias{getN}
 
 \title{
