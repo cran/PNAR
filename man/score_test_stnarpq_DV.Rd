@@ -83,7 +83,7 @@ is the partition of the quasi score related to the vector of non-linear paramete
 \eqn{\Sigma(\hat{\theta},\gamma)} is the variance of \eqn{S(\hat{\theta},\gamma)}. Since the test statistic depends on an
 unknown nuisance parameter (\eqn{\gamma}), the supremum of the statistic is considered in the test, \eqn{\sup_{\gamma}LM(\gamma)}. The function computes the bound of the p-value, suggested by Davies (1987), for the test statistic \eqn{\sup_{\gamma}LM(\gamma)}, with scalar nuisance parameter \eqn{\gamma}, as follows.
 \eqn{
-P(x^{2}_{k} \geq M)+V M^{1/2(k-1)}\frac{e^{-M/2}2^{-k/2}}{\Gamma(k/2)}
+P(\chi^{2}_{k} \geq M)+V M^{1/2(k-1)}\frac{e^{-M/2}2^{-k/2}}{\Gamma(k/2)}
 }
 where \eqn{M} is the maximum of the test statistic \eqn{LM(\gamma)}, computed by the available sample, over a grid of
 values for the nuisance parameter \eqn{\gamma_{F}=(\gamma_{L},\gamma_{1},...,\gamma_{l},\gamma_{U})}; \eqn{k} is the
@@ -139,7 +139,7 @@ Mirko Armillotta, Michail Tsagris and Konstantinos Fokianos.
 data(crime)
 data(crime_W)
 mod1 <- lin_estimnarpq(crime, crime_W, p = 1)
-ca <- mod1$coeflin
+ca <- mod1$coeflin[, 1]
 score_test_stnarpq_DV(ca, crime, crime_W, p = 1, d = 1)
 }
 

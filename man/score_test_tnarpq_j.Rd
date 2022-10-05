@@ -13,7 +13,7 @@ non-linear Threshold alternative (T-PNAR(\eqn{p})).
 
 \usage{
 score_test_tnarpq_j(supLM, b, y, W, p, d, Z = NULL, J = 499,
-gama_L = NULL, gama_U = NULL, tol = 1e-9, ncores = 1)
+gama_L = NULL, gama_U = NULL, tol = 1e-9, ncores = 1, seed = NULL)
 }
 
 \arguments{
@@ -67,6 +67,9 @@ The tolerance level for the optimizer.
 The number of cores to use for parallel computing. By default the number of
 cores is set to 1 (no parallel computing). \bold{Note:} If for some reason the
 parallel does not work then load the doParallel package yourseleves.
+}
+\item{seed}{
+If you want the same to be generated again use a seed for the generator, an integer number.
 }
 }
 
@@ -138,7 +141,7 @@ data(crime)
 data(crime_W)
 #estimate linear PNAR model
 mod1 <- lin_estimnarpq(crime, crime_W, p = 2)
-b <- mod1$coeflin
+b <- mod1$coeflin[, 1]
 \donttest{
 g <- global_optimise_LM_tnarpq(b = b, y = crime, W = crime_W, p = 2, d = 1)
 supg <- g$supLM

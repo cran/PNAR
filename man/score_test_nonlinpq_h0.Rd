@@ -104,7 +104,7 @@ Mirko Armillotta, Michail Tsagris and Konstantinos Fokianos.
 data(crime)
 data(crime_W)
 mod1 <- lin_estimnarpq(crime, crime_W, p = 2)
-ca <- mod1$coeflin
+ca <- mod1$coeflin[, 1]
 score_test_nonlinpq_h0(ca, crime, crime_W, p = 2, d = 1)
 }
 

@@ -119,7 +119,7 @@
 ##    qic_lin = Quasi information criterion (QIC)
 ################################################################################
 
-lin_estimnarpq <- function(y, W, p, Z = NULL) {
+lin_estimnarpq <- function(y, W, p, Z = NULL, uncons = FALSE) {
 
   if ( min(W) < 0 ) {
     stop('The adjacency matrix W contains negative values.')
@@ -152,27 +152,32 @@ lin_estimnarpq <- function(y, W, p, Z = NULL) {
   lb <- rep(0, m)
   ub <- rep(Inf, m)
 
-  # Inequality constraints (parameters searched in the stationary region)
-  # b are the parameters to be constrained
-  constr <- function(b, N, TT, y, W, wy, p, Z) {
-    con <- sum( b[2:(2 * p + 1)] ) -1
-    return(con)
-  }
-
-  # Jacobian of constraints
-  # b are the parameters to be constrained
-  j_constr <- function(b, N, TT, y, W, wy, p, Z) {
-    j_con <- rep(1, m)
-    j_con[1] <- 0
-    return(j_con)
-  }
-
   # algorithm and relative tolerance
   opts <- list( "algorithm" = "NLOPT_LD_SLSQP", "xtol_rel" = 1.0e-8 )
 
-  s_qmle <- nloptr::nloptr(x0 = x0, eval_f = .logl_linpq, eval_grad_f = .scor_linpq,
-                   lb = lb, ub = ub, eval_g_ineq = constr, eval_jac_g_ineq = j_constr,
-                   opts = opts, N = N, TT = TT, y = y, W = W, wy = wy, p = p, Z = Z)
+  if ( uncons ) {
+
+    s_qmle <- nloptr::nloptr(x0 = x0, eval_f = .logl_linpq, eval_grad_f = .scor_linpq, lb = lb,
+                     ub = ub, opts = opts, N = N, TT = TT, y = y, W = W, wy = wy, p = p, Z = Z)
+  } else {
+    # Inequality constraints (parameters searched in the stationary region)
+    # b are the parameters to be constrained
+    constr <- function(b, N, TT, y, W, wy, p, Z) {
+      con <- sum( b[2:(2 * p + 1)] ) - 1
+      return(con)
+    }
+    # Jacobian of constraints
+    # b are the parameters to be constrained
+    j_constr <- function(b, N, TT, y, W, wy, p, Z) {
+      j_con <- rep(1, m)
+      j_con[1] <- 0
+      return(j_con)
+    }
+
+    s_qmle <- nloptr::nloptr(x0 = x0, eval_f = .logl_linpq, eval_grad_f = .scor_linpq,
+                      lb = lb, ub = ub, eval_g_ineq = constr, eval_jac_g_ineq = j_constr,
+                      opts = opts, N = N, TT = TT, y = y, W = W, wy = wy, p = p, Z = Z)
+  }
 
   coeflin <- s_qmle$solution
 
@@ -185,14 +190,27 @@ lin_estimnarpq <- function(y, W, p, Z = NULL) {
   SE_lins <- sqrt( diag(V_lins) )
 
   tlin <- coeflin/SE_lins
+  pval <- 2 * pnorm(abs(tlin), lower.tail = FALSE)
 
   loglik <-  - s_qmle$objective
   aic_lins <- 2 * m + 2 * s_qmle$objective
   bic_lins <- log(TT) * m + 2 * s_qmle$objective
   qic_lins <- 2 * sum( H_lins * V_lins) + 2 * s_qmle$objective
 
-  list( coeflin = coeflin, selin = SE_lins, tlin = tlin, score = S_lins,
-        loglik = loglik, aic_lin = aic_lins, bic_lin = bic_lins, qic_lin = qic_lins )
+  coeflin <- cbind(coeflin, SE_lins, tlin, pval)
+  colnames(coeflin) <- c("Estimate", "Std. Error", "Z-stat", "p-value")
+  if ( !is.null( dim(Z) ) ) {
+    rownames(coeflin) <- rownames(S_lins) <-  c( "beta0", paste("beta1", 1:p, sep =""), paste("beta2", 1:p, sep =""),
+                                                 paste("delta", 1:dim(Z)[2], sep = "") )
+  } else  rownames(coeflin) <- rownames(S_lins) <- c( "beta0", paste("beta1", 1:p, sep =""), paste("beta2", 1:p, sep ="") )
+  ic <- c(aic_lins, bic_lins, qic_lins)
+  names(ic) <- c("AIC", "BIC", "QIC")
+
+  if ( any(abs(S_lins) > 1e-3 ) )  {
+    warning( paste("Optimization failed in the stationary region. Please try estimation without stationarity constraints.") )
+  }
+
+  list( coeflin = coeflin, score = S_lins, loglik = loglik, ic = ic )
 }
 
 

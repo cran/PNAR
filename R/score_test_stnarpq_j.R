@@ -23,7 +23,8 @@
 }
 
 
-score_test_stnarpq_j <- function(supLM, b, y, W, p, d, Z = NULL, J = 499, gama_L = NULL, gama_U = NULL, tol = 1e-9, ncores = 1) {
+score_test_stnarpq_j <- function(supLM, b, y, W, p, d, Z = NULL, J = 499, gama_L = NULL, gama_U = NULL,
+                                 tol = 1e-9, ncores = 1, seed = NULL) {
 
   if ( min(W) < 0 ) {
     stop('The adjacency matrix W contains negative values.')
@@ -71,7 +72,7 @@ score_test_stnarpq_j <- function(supLM, b, y, W, p, d, Z = NULL, J = 499, gama_L
     gama_U <-  -log(0.1) / x^2
   }
 
-  msn <- Rfast::matrnorm(TT, J)
+  msn <- Rfast::matrnorm(TT, J, seed = seed)
   rows <- rep( (p + 1):TT, each = N )
   msn <- msn[rows, ]
   k <- rep( 1:c(TT - p), each = N )
@@ -101,6 +102,7 @@ score_test_stnarpq_j <- function(supLM, b, y, W, p, d, Z = NULL, J = 499, gama_L
     parallel::stopCluster(cl)
     gamaj <- mod[, 1]
     supLMj <- mod[, 2]
+    names(gamaj) <- names(supLMj) <- NULL
     pval <- mod[, 3]
     })
   }

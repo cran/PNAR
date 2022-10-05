@@ -12,7 +12,7 @@ with \eqn{q} covariates (PNAR(\eqn{p})).
 }
 
 \usage{
-lin_estimnarpq(y, W, p, Z = NULL)
+lin_estimnarpq(y, W, p, Z = NULL, uncons = FALSE)
 }
 
 \arguments{
@@ -34,6 +34,10 @@ The number of lags in the model.
 An \eqn{N} x \eqn{q} matrix of covariates (one for each column), where \eqn{q}
 is the number of covariates in the model. Note that they must be non-negative.
 }
+\item{uncons}{
+logical, if TRUE an unconstrained optimization without stationarity
+constraints is performed (default is FALSE).
+}
 }
 
 \details{
@@ -47,20 +51,15 @@ The estimation of the parameters of the model is performed by Quasi Maximum Like
 \deqn{
 l(\theta)=\sum_{t=1}^{TT}\sum_{i=1}^{N}\left[Y_{i,t}\log\lambda_{i,t}(\theta)-\lambda_{i,t}(\theta)\right]
 }
-with respect to the vector of unknown parameters \eqn{\theta} described above. The coefficients are defined only in the non-negative real line. The optimization is constrained in the stationary region where \eqn{\sum_{h=1}^{p}\beta_{1h}+\beta_{2h}<1}. The ordinary least squares estimates are employed as starting values of the optimization procedure.
-Robust standard errors and t-tests are also returned.
+with respect to the vector of unknown parameters \eqn{\theta} described above. The coefficients are defined only in the non-negative real line.
+By default, the optimization is constrained in the stationary region where \eqn{\sum_{h=1}^{p}\beta_{1h}+\beta_{2h}<1}; this can be removed by setting \code{uncons = TRUE}. However, the user should be warned that the model estimates can be inconsistent if the estimated parameters lie outside the stationary region.
+The ordinary least squares estimates are employed as starting values of the optimization procedure. Robust standard errors and z-tests are also returned.
 }
 
 \value{
 A list including:
 \item{coeflin}{
-The vector of estimated QMLE coefficients.
-}
-\item{selin}{
-The standard errors of the estimated coefficients.
-}
-\item{tlin}{
-The t-test statistics of the estimated coefficients.
+A matrix with the estimated QMLE coefficients, their standard errors their Z-test statistics and the relevant p-values computed via the standard normal approximation.
 }
 \item{score}{
 The value of the quasi score function at the optimization point.
@@ -69,14 +68,8 @@ It should be close to 0 if the optimization is successful.
 \item{loglik}{
 The value of the maximized quasi log-likelihood.
 }
-\item{aic_lin}{
-The Akaike information criterion (AIC).
-}
-\item{bic_lin}{
-The Bayesian information criterion (BIC).
-}
-\item{qic_lin}{
-The Quasi information criterion (QIC).
+\item{ic}{
+A vector with the Akaike information criterion (AIC), the Bayesian information criterion (BIC) and the Quasi information criterion (QIC).
 }
 }
 
@@ -95,9 +88,9 @@ Mirko Armillotta, Michail Tsagris and Konstantinos Fokianos.
 }
 
 \examples{
-W <- adja_gnp(20, 0.3)
-y <- matrix(rpois(20 * 100, 10), ncol = 100)
-mod <- lin_estimnarpq(y, W, p = 3)
+data(crime)
+data(crime_W)
+mod1 <- lin_estimnarpq(crime, crime_W, p = 2)
 }
 
 
