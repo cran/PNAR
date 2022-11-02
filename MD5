@@ -1,12 +1,14 @@
-d3088d16d955587b99efc0c90c5d9ba6 *DESCRIPTION
-b52508ffec0c1c80da1ab436010112ef *NAMESPACE
+94bd9723a5cadd969f84fe5ffa7f1c84 *DESCRIPTION
+6a683cc90bc5ab87bfc759b5b8a5fe29 *NAMESPACE
 6840964a4cbf87a22363adf61b6e9733 *R/adja.R
 d395e606ee61cb78eed73f35f1c06af7 *R/adja_gnp.R
 8e8a32ab5e56efcc4e4ca897c8adfdce *R/getN.R
 be2fdffad5a12d06aee3afc6c850e94d *R/global_optimise_LM_stnarpq.R
 8f993234c26380e6a2bc18d3f06e5f64 *R/global_optimise_LM_tnarpq.R
-172423eea39e2db70bda590fc3c87bb7 *R/lin_estimnarpq.R
-ee54f67128710308ec729e83f21d27cf *R/log_lin_estimnarpq.R
+4149962c54c26d42deac2c491e183f75 *R/lin_estimnarpq.R
+055ce53e1c0b2476d9ce5bea36d3a80d *R/lin_ic_plot.R
+d0378a4fbbd5b4277a19f3d0709551bf *R/log_lin_estimnarpq.R
+30597f5911c19dec86f68e31f3e42f9a *R/log_lin_ic_plot.R
 5f2d71755c8296364622e3c09a8677ae *R/poisson.MODpq.R
 60da7f43afe685eda7288c66980cc507 *R/poisson.MODpq.log.R
 13304ea4b2ec31f4c8e264c8fa996e88 *R/poisson.MODpq.nonlin.R
@@ -19,7 +21,7 @@ ee54f67128710308ec729e83f21d27cf *R/log_lin_estimnarpq.R
 d87be66c22a15e5deeb47a3369bece70 *R/score_test_tnarpq_j.R
 e4e73c977d05a76a9a8baf44fa121b76 *data/crime.rda
 90a16c5368e6c282082c6464e2cc3879 *data/crime_W.rda
-4fe56769d7d916d86c236f7bb77c45c3 *man/PNAR-package.Rd
+d0f0ad86d75e8fa52df09e57a8c28d89 *man/PNAR-package.Rd
 c38b40f7866f67d3115442cd9bbc4f54 *man/adja.Rd
 46b555176c979096a95def2485ba102b *man/adja_gnp.Rd
 49f219df5ad028d2b2b9e93724f51ee5 *man/crime.Rd
@@ -28,7 +30,9 @@ f841719246b99739b2bf0be1a9367fcb *man/getN.Rd
 f632976b82c4672217490f165bd83554 *man/global_optimise_LM_stnarpq.Rd
 1fbd9af0d3e8055671f6d1c9793f675d *man/global_optimise_LM_tnarpq.Rd
 6370137e9eaa9759d7c225c94eaa2a1a *man/lin_estimnarpq.Rd
+1af273a2e5edf0bedad01e5db33c307f *man/lin_ic_plot.Rd
 44becec1806ed093253f07443b2cb794 *man/log_lin_estimnarpq.Rd
+8326d1d7c9d7268bfac48e50363943f0 *man/log_lin_ic_plot.Rd
 ec6c6709f0ecc42c58c65167f71ac105 *man/poisson.MODpq.Rd
 9bf970ff2ccea119ff3216803032e969 *man/poisson.MODpq.log.Rd
 258b2d600938af326a794928115a3825 *man/poisson.MODpq.nonlin.Rd

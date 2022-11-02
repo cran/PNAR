@@ -195,7 +195,7 @@ lin_estimnarpq <- function(y, W, p, Z = NULL, uncons = FALSE) {
   loglik <-  - s_qmle$objective
   aic_lins <- 2 * m + 2 * s_qmle$objective
   bic_lins <- log(TT) * m + 2 * s_qmle$objective
-  qic_lins <- 2 * sum( H_lins * V_lins) + 2 * s_qmle$objective
+  qic_lins <- 2 * sum( H_lins * V_lins ) + 2 * s_qmle$objective
 
   coeflin <- cbind(coeflin, SE_lins, tlin, pval)
   colnames(coeflin) <- c("Estimate", "Std. Error", "Z-stat", "p-value")
@@ -206,8 +206,16 @@ lin_estimnarpq <- function(y, W, p, Z = NULL, uncons = FALSE) {
   ic <- c(aic_lins, bic_lins, qic_lins)
   names(ic) <- c("AIC", "BIC", "QIC")
 
-  if ( any(abs(S_lins) > 1e-3 ) )  {
-    warning( paste("Optimization failed in the stationary region. Please try estimation without stationarity constraints.") )
+  if ( !uncons ) {
+    if ( any( abs(S_lins) > 1e-3 ) )  {
+      warning( paste("Optimization failed in the stationary region. Please try estimation without stationarity constraints.") )
+    }
+  }
+
+  if ( uncons ) {
+    if ( any( abs(S_lins) > 1e-3 ) )  {
+      warning( paste("The score function is not close to zero.") )
+    }
   }
 
   list( coeflin = coeflin, score = S_lins, loglik = loglik, ic = ic )

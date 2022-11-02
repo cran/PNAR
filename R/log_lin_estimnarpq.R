@@ -145,18 +145,26 @@ log_lin_estimnarpq <- function(y, W, p, Z = NULL, uncons = FALSE) {
   for ( ti in (p + 1):TT )  wy <- rbind( wy, cbind(z[, (ti - 1):(ti - p)], ly[, (ti - 1):(ti - p)], Z) )
   wy <- cbind(1, wy)
 
-  XX <- crossprod(wy)
-  Xy <- Rfast::eachcol.apply(wy, as.vector( ly[, -c(1:p)] ) )
-  x0 <- solve(XX, Xy)
-
-  m <- length(x0)
-  # algorithm and and relative tolerance
-  opts <- list("algorithm" = "NLOPT_LD_SLSQP", "xtol_rel" = 1e-8)
-
   if( uncons ) {
-    s_qmle <- nloptr::nloptr(x0 = x0, eval_f = .logl_log_linpq, eval_grad_f = .scor_logpq,
-                      opts = opts, N = N, TT = TT, y = y, W = W, wy = wy, p = p, Z = Z)
+    #s_qmle <- nloptr::nloptr(x0 = x0, eval_f = .logl_log_linpq, eval_grad_f = .scor_logpq,
+    #                  opts = opts, N = N, TT = TT, y = y, W = W, wy = wy, p = p, Z = Z)
+    colnames(wy) <- NULL
+    yp <- as.vector( y[, -c(1:p)] )
+    mod <- glm(yp~., data = as.data.frame(wy[, -1]), poisson)
+    s_qmle <- list()
+    s_qmle$solution <- mod$coefficients
+    s_qmle$objective <-  - as.numeric( logLik(mod) ) - sum( lfactorial(yp) )
+    m <- length(mod$coefficients)
+
   } else {
+
+    XX <- crossprod(wy)
+    Xy <- Rfast::eachcol.apply(wy, as.vector( ly[, -c(1:p)] ) )
+    x0 <- solve(XX, Xy)
+
+    m <- length(x0)
+    # algorithm and and relative tolerance
+    opts <- list("algorithm" = "NLOPT_LD_SLSQP", "xtol_rel" = 1e-8)
 
     # Inequality constraints (parameters searched in the stationary region)
     # b are the parameters to be constrained
@@ -177,7 +185,6 @@ log_lin_estimnarpq <- function(y, W, p, Z = NULL, uncons = FALSE) {
                       eval_g_ineq = constr, eval_jac_g_ineq = j_constr, opts = opts,
                       N = N, TT = TT, y = y, W = W, wy = wy, p = p, Z = Z)
   }
-
   coeflin <- s_qmle$solution
 
   ola <- .scor_hess_outer_logpq(coeflin, N, TT, y, wy, p, Z)
@@ -206,8 +213,16 @@ log_lin_estimnarpq <- function(y, W, p, Z = NULL, uncons = FALSE) {
   ic <- c(aic_lins, bic_lins, qic_lins)
   names(ic) <- c("AIC", "BIC", "QIC")
 
-  if ( any( abs(S_lins) > 1e-3 ) )  {
-    warning( paste("Optimization failed in the stationary region. Please try estimation without stationarity constraints.") )
+  if ( !uncons ) {
+    if ( any( abs(S_lins) > 1e-3 ) )  {
+      warning( paste("Optimization failed in the stationary region. Please try estimation without stationarity constraints.") )
+    }
+  }
+
+  if ( uncons ) {
+    if ( any( abs(S_lins) > 1e-3 ) )  {
+      warning( paste("The score function is not close to zero.") )
+    }
   }
 
   list( coeflog = coeflog, score = S_lins, loglik = loglik, ic = ic )

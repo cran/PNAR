@@ -14,8 +14,8 @@ Quasi likelihood-based methods for estimating Poisson Network Autoregression wit
 \tabular{ll}{
 Package: \tab PNAR\cr
 Type: \tab Package\cr
-Version: \tab 1.2\cr
-Date: \tab 2022-10-05\cr
+Version: \tab 1.3\cr
+Date: \tab 2022-11-02\cr
 License: \tab GPL(>=2)\cr
 }
 }
