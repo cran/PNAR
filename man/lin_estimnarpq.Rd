@@ -12,7 +12,8 @@ with \eqn{q} covariates (PNAR(\eqn{p})).
 }
 
 \usage{
-lin_estimnarpq(y, W, p, Z = NULL, uncons = FALSE)
+lin_estimnarpq(y, W, p, Z = NULL, uncons = FALSE, init = NULL,
+xtol_rel = 1e-8, maxeval = 100)
 }
 
 \arguments{
@@ -37,6 +38,16 @@ is the number of covariates in the model. Note that they must be non-negative.
 \item{uncons}{
 logical, if TRUE an unconstrained optimization without stationarity
 constraints is performed (default is FALSE).
+}
+\item{init}{
+A vector of starting values for the optimization algorithm. If this is NULL,
+the function computes them internally.
+}
+\item{xtol_rel}{
+The stopping tolerance of the optimization algorithm.
+}
+\item{maxeval}{
+The maximum number of evalutions the optimization algorithm will perform.
 }
 }
 
@@ -74,8 +85,12 @@ A vector with the Akaike information criterion (AIC), the Bayesian information c
 }
 
 \references{
-Armillotta, M. and K. Fokianos (2022). Poisson network autoregression.
+Armillotta, M. and K. Fokianos (2022a). Poisson network autoregression.
 \url{https://arxiv.org/abs/2104.06296}
+
+Armillotta, M., Tsagris, M. and Fokianos, K. (2022c). The R-package PNAR
+for modelling count network time series.
+\url{https://arxiv.org/abs/2211.02582}
 }
 
 \author{

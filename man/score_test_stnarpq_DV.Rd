@@ -124,6 +124,10 @@ autoregressive models.
 
 Davies, R. B. (1987). Hypothesis testing when a nuisance parameter is
 present only under the alternative. \emph{Biometrika} 74, 33-43.
+
+Armillotta, M., Tsagris, M. and Fokianos, K. (2022c). The R-package PNAR
+for modelling count network time series.
+\url{https://arxiv.org/abs/2211.02582}
 }
 
 \author{

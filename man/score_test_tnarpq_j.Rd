@@ -123,6 +123,10 @@ Armillotta, M. and K. Fokianos (2022a). Poisson network autoregression.
 Armillotta, M. and K. Fokianos (2022b). Testing linearity for network
 autoregressive models.
 \url{https://arxiv.org/abs/2202.03852}
+
+Armillotta, M., Tsagris, M. and Fokianos, K. (2022c). The R-package PNAR
+for modelling count network time series.
+\url{https://arxiv.org/abs/2211.02582}
 }
 
 \author{

@@ -12,7 +12,8 @@ Estimation of the log-linear Poisson Network Autoregressive model of order
 }
 
 \usage{
-log_lin_estimnarpq(y, W, p, Z = NULL, uncons = FALSE)
+log_lin_estimnarpq(y, W, p, Z = NULL, uncons = FALSE, init = NULL,
+xtol_rel = 1e-8, maxeval = 100)
 }
 
 \arguments{
@@ -38,6 +39,16 @@ is the number of covariates in the model.
 logical, if TRUE an unconstrained optimization without stationarity
 constraints is performed (default is FALSE).
 }
+\item{init}{
+A vector of starting values for the optimization algorithm. If this is NULL,
+the function computes them internally.
+}
+\item{xtol_rel}{
+The stopping tolerance of the optimization algorithm.
+}
+\item{maxeval}{
+The maximum number of evalutions the optimization algorithm will perform.
+}
 }
 
 \details{
@@ -51,8 +62,8 @@ The estimation of the parameters of the model is performed by Quasi Maximum Like
 \deqn{
 l(\theta)=\sum_{t=1}^{TT}\sum_{i=1}^{N}\left[Y_{i,t}\nu_{i,t}(\theta)-e^{\nu_{i,t}(\theta)}\right]
 }
-with respect to the vector of unknown parameters \eqn{\theta} described above. 
-By default, the optimization is constrained in the stationary region where \eqn{\sum_{h=1}^{p}|\beta_{1h}|+|\beta_{2h}|<1}; this can be removed by setting \code{uncons = TRUE}. However, the user should be warned that the model estimates can be inconsistent if the estimated parameters lie outside the stationary region. 
+with respect to the vector of unknown parameters \eqn{\theta} described above.
+By default, the optimization is constrained in the stationary region where \eqn{\sum_{h=1}^{p}|\beta_{1h}|+|\beta_{2h}|<1}; this can be removed by setting \code{uncons = TRUE}. However, the user should be warned that the model estimates can be inconsistent if the estimated parameters lie outside the stationary region.
 The ordinary least squares estimates are employed as starting values of the optimization procedure. Robust standard errors and z-tests are also returned.
 }
 
@@ -74,8 +85,12 @@ A vector with the Akaike information criterion (AIC), the Bayesian information c
 }
 
 \references{
-Armillotta, M. and K. Fokianos (2022). Poisson network autoregression.
+Armillotta, M. and K. Fokianos (2022a). Poisson network autoregression.
 \url{https://arxiv.org/abs/2104.06296}
+
+Armillotta, M., Tsagris, M. and Fokianos, K. (2022c). The R-package PNAR
+for modelling count network time series.
+\url{https://arxiv.org/abs/2211.02582}
 }
 
 \author{

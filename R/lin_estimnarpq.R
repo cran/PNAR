@@ -119,7 +119,7 @@
 ##    qic_lin = Quasi information criterion (QIC)
 ################################################################################
 
-lin_estimnarpq <- function(y, W, p, Z = NULL, uncons = FALSE) {
+lin_estimnarpq <- function(y, W, p, Z = NULL, uncons = FALSE, init = NULL, xtol_rel = 1e-8, maxeval = 100) {
 
   if ( min(W) < 0 ) {
     stop('The adjacency matrix W contains negative values.')
@@ -142,10 +142,13 @@ lin_estimnarpq <- function(y, W, p, Z = NULL, uncons = FALSE) {
   for ( ti in (p + 1):TT )  wy <- rbind( wy, cbind(z[, (ti - 1):(ti - p)], y[, (ti - 1):(ti - p)], Z) )
   wy <- cbind(1, wy)
 
-  XX <- crossprod(wy)
-  Xy <- Rfast::eachcol.apply(wy, as.vector( y[, -c(1:p)] ) )
-  x0 <- solve(XX, Xy)
-  x0[x0 < 0] <- 0.001
+  if ( is.null(init) ) {
+
+    XX <- crossprod(wy)
+    Xy <- Rfast::eachcol.apply(wy, as.vector( y[, -c(1:p)] ) )
+    x0 <- solve(XX, Xy)
+    x0[x0 < 0] <- 0.001
+  } else  x0 <- init
 
   m <- length(x0)
   # Lower and upper bounds (positivity constraints)
@@ -153,7 +156,7 @@ lin_estimnarpq <- function(y, W, p, Z = NULL, uncons = FALSE) {
   ub <- rep(Inf, m)
 
   # algorithm and relative tolerance
-  opts <- list( "algorithm" = "NLOPT_LD_SLSQP", "xtol_rel" = 1.0e-8 )
+  opts <- list( "algorithm" = "NLOPT_LD_SLSQP", "xtol_rel" = xtol_rel, "maxeval" = maxeval )
 
   if ( uncons ) {
 
@@ -206,17 +209,17 @@ lin_estimnarpq <- function(y, W, p, Z = NULL, uncons = FALSE) {
   ic <- c(aic_lins, bic_lins, qic_lins)
   names(ic) <- c("AIC", "BIC", "QIC")
 
-  if ( !uncons ) {
-    if ( any( abs(S_lins) > 1e-3 ) )  {
-      warning( paste("Optimization failed in the stationary region. Please try estimation without stationarity constraints.") )
-    }
-  }
+ # if ( !uncons ) {
+ #   if ( any( abs(S_lins) > 1e-3 ) )  {
+ #     warning( paste("Optimization failed in the stationary region. Please try estimation without stationarity constraints.") )
+ #   }
+ # }
 
-  if ( uncons ) {
-    if ( any( abs(S_lins) > 1e-3 ) )  {
-      warning( paste("The score function is not close to zero.") )
-    }
-  }
+ # if ( uncons ) {
+ #   if ( any( abs(S_lins) > 1e-3 ) )  {
+ #     warning( paste("The score function is not close to zero.") )
+ #   }
+ # }
 
   list( coeflin = coeflin, score = S_lins, loglik = loglik, ic = ic )
 }

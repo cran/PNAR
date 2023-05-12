@@ -124,7 +124,7 @@
 ##    qic_lin = Quasi information criterion (QIC)
 ################################################################################
 
-log_lin_estimnarpq <- function(y, W, p, Z = NULL, uncons = FALSE) {
+log_lin_estimnarpq <- function(y, W, p, Z = NULL, uncons = FALSE, init = NULL, xtol_rel = 1e-8, maxeval = 100) {
 
   if ( min(W) < 0 ) {
     stop('The adjacency matrix W contains negative values.')
@@ -158,13 +158,15 @@ log_lin_estimnarpq <- function(y, W, p, Z = NULL, uncons = FALSE) {
 
   } else {
 
-    XX <- crossprod(wy)
-    Xy <- Rfast::eachcol.apply(wy, as.vector( ly[, -c(1:p)] ) )
-    x0 <- solve(XX, Xy)
+    if ( is.null(init) ) {
+      XX <- crossprod(wy)
+      Xy <- Rfast::eachcol.apply(wy, as.vector( ly[, -c(1:p)] ) )
+      x0 <- solve(XX, Xy)
+    } else  x0 <- init
 
     m <- length(x0)
     # algorithm and and relative tolerance
-    opts <- list("algorithm" = "NLOPT_LD_SLSQP", "xtol_rel" = 1e-8)
+    opts <- list( "algorithm" = "NLOPT_LD_SLSQP", "xtol_rel" = xtol_rel, "maxeval" = maxeval )
 
     # Inequality constraints (parameters searched in the stationary region)
     # b are the parameters to be constrained
@@ -213,17 +215,17 @@ log_lin_estimnarpq <- function(y, W, p, Z = NULL, uncons = FALSE) {
   ic <- c(aic_lins, bic_lins, qic_lins)
   names(ic) <- c("AIC", "BIC", "QIC")
 
-  if ( !uncons ) {
-    if ( any( abs(S_lins) > 1e-3 ) )  {
-      warning( paste("Optimization failed in the stationary region. Please try estimation without stationarity constraints.") )
-    }
-  }
+ # if ( !uncons ) {
+ #   if ( any( abs(S_lins) > 1e-3 ) )  {
+ #     warning( paste("Optimization failed in the stationary region. Please try estimation without stationarity constraints.") )
+ #   }
+ # }
 
-  if ( uncons ) {
-    if ( any( abs(S_lins) > 1e-3 ) )  {
-      warning( paste("The score function is not close to zero.") )
-    }
-  }
+ # if ( uncons ) {
+ #   if ( any( abs(S_lins) > 1e-3 ) )  {
+ #     warning( paste("The score function is not close to zero.") )
+ #   }
+ # }
 
   list( coeflog = coeflog, score = S_lins, loglik = loglik, ic = ic )
 }
