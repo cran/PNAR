@@ -31,17 +31,16 @@ poisson.MODpq.log <- function(b, W, p, Z = NULL, TT, N, copula = "gaussian",
   } else  cholR <- NULL   ##  end  if ( copula != "clayton" )  {
 
   for ( ti in 1:p) {
-    u <- rcopula(n, N, copula, corrtype, rho, dof, cholR )
+    u <- PNAR::rcopula(n, N, copula, corrtype, rho, dof, cholR)
     x <- Rfast::eachrow( log(u), -exp( nut[, ti] ), oper = "/" )
-    y[, ti] <- getN(x, tt = 1)
+    y[, ti] <- PNAR::getN(x, tt = 1)
     i <- 0
     while ( sum( is.na(y[, ti]) ) > 0 ) {
       i <- i + 2
-      u <- rcopula(i * 100 + n, N, copula, corrtype, rho, dof, cholR )
+      u <- PNAR::rcopula(i * 100 + n, N, copula, corrtype, rho, dof, cholR)
       x <- Rfast::eachrow( log(u), -exp( nut[, ti] ), oper = "/" )
-      y[, ti] <- getN(x, tt = 1)
+      y[, ti] <- PNAR::getN(x, tt = 1)
     }
-    x <- u <- NULL
   }
 
   ly <- log1p(y)
@@ -49,18 +48,22 @@ poisson.MODpq.log <- function(b, W, p, Z = NULL, TT, N, copula = "gaussian",
   for ( ti in (p + 1):TT ) {
     X <- cbind(1, W %*% ly[, (ti - 1):(ti - p)], ly[, (ti - 1):(ti - p)], Z)
     nut[, ti] <- X %*% b
-    u <- rcopula(n, N, copula, corrtype, rho, dof, cholR )
+    u <- PNAR::rcopula(n, N, copula, corrtype, rho, dof, cholR)
     x <- Rfast::eachrow( log(u), -exp( nut[, ti] ), oper = "/" )
-    y[, ti] <- getN(x, tt = 1)
+    y[, ti] <- PNAR::getN(x, tt = 1)
     i <- 0
     while ( sum( is.na(y[, ti]) ) > 0 ) {
       i <- i + 2
-      u <- rcopula(i * 100 + n, N, copula, corrtype, rho, dof, cholR )
+      u <- PNAR::rcopula(i * 100 + n, N, copula, corrtype, rho, dof, cholR)
       x <- Rfast::eachrow( log(u), -exp( nut[, ti] ), oper = "/" )
-      y[, ti] <- getN(x, tt = 1)
+      y[, ti] <- PNAR::getN(x, tt = 1)
     }
   }
 
+  x <- u <- NULL
+
+  nut <- ts( t(nut) )
+  y <- ts(t(y) )
   list(p2R = p2R, log_lambda = nut, y = y)
 }
 

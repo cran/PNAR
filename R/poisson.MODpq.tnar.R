@@ -35,15 +35,15 @@ poisson.MODpq.tnar <- function(b, W, gama, a, p, d, Z = NULL, TT, N, copula = "g
   } else  cholR <- NULL   ##  end  if ( copula != "clayton" )  {
 
   for ( ti in 1:p) {
-    u <- rcopula(n, N, copula, corrtype, rho, dof, cholR )
+    u <- PNAR::rcopula(n, N, copula, corrtype, rho, dof, cholR)
     x <- Rfast::eachrow( log(u), -lambda[, ti], oper = "/" )
-    y[, ti] <- getN(x, tt = 1)
+    y[, ti] <- PNAR::getN(x, tt = 1)
     i <- 0
     while ( sum( is.na(y[, ti]) ) > 0 ) {
       i <- i + 2
-      u <- rcopula(n, N, copula, corrtype, rho, dof, cholR )
+      u <- PNAR::rcopula(n, N, copula, corrtype, rho, dof, cholR)
       x <- Rfast::eachrow( log(u), -lambda[, ti], oper = "/" )
-      y[, ti] <- getN(x, tt = 1)
+      y[, ti] <- PNAR::getN(x, tt = 1)
     }
     ca[, ti] <- ( W %*% y[, ti] <= gama )
     x <- u <- NULL
@@ -52,20 +52,23 @@ poisson.MODpq.tnar <- function(b, W, gama, a, p, d, Z = NULL, TT, N, copula = "g
   for ( ti in (p + 1):TT ) {
     X <- cbind(1, W %*% y[, (ti - 1):(ti - p)], y[, (ti - 1):(ti - p)], Z)
     lambda[, ti] <- X %*% b + ( X[, 1:(1 + 2 * p)] %*%  a ) * ca[, ti - d]
-    u <- rcopula(n, N, copula, corrtype, rho, dof, cholR )
+    u <- PNAR::rcopula(n, N, copula, corrtype, rho, dof, cholR)
     x <- Rfast::eachrow( log(u), -lambda[, ti], oper = "/" )
-    y[, ti] <- getN(x, tt = 1)
+    y[, ti] <- PNAR::getN(x, tt = 1)
     i <- 0
     while ( sum( is.na(y[, ti]) ) > 0 ) {
       i <- i + 2
-      u <- rcopula(n, N, copula, corrtype, rho, dof, cholR )
+      u <- PNAR::rcopula(n, N, copula, corrtype, rho, dof, cholR)
       x <- Rfast::eachrow( log(u), -lambda[, ti], oper = "/" )
-      y[, ti] <- getN(x, tt = 1)
+      y[, ti] <- PNAR::getN(x, tt = 1)
     }
     ca[, ti] <- ( W %*% y[, ti] <= gama )
-    x <- u <- NULL
   }
 
+  x <- u <- NULL
+
+  lambda <- ts( t(lambda) )
+  y <- ts( t(y) )
   list(p2R = p2R, lambda = lambda, y = y)
 }
 

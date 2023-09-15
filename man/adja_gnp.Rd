@@ -27,8 +27,8 @@ network is generated.
 }
 
 \details{
-For each couple of nodes it performs a Bernoulli trial with values 1 "draw an edge", 0 "otherwise".
-Each trial has the same probability of having an edge; this is equal to \eqn{\alpha*N^{-0.3}}, specified based on the number of nodes on the network \code{N} and the network density \code{alpha}.
+For each pair of nodes it performs a Bernoulli trial with values 1 "draw an edge", 0 "otherwise".
+Each trial has the same probability of having an edge; this is equal to \eqn{\alpha*N^{-0.3}}, specified based on the number of nodes on the network \eqn{N} and the network density \code{alpha}.
 }
 
 \value{

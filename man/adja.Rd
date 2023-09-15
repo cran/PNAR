@@ -5,7 +5,7 @@ Generation of a network from the Stochastic Block Model
 }
 
 \description{
-This function generates a network from the Stochastic Block Model with K blocks.
+This function generates a network from the Stochastic Block Model with \eqn{K} blocks.
 }
 
 \usage{
@@ -17,8 +17,8 @@ adja(N, K, alpha, directed = FALSE)
 The number of nodes on the network.
 }
 \item{K}{
-The number of blocks. Each block has dimension \code{N}/\code{K} so \code{K}
-should be chosen such that \code{N} is divisible by \code{K}.
+The number of blocks. Each block has dimension \eqn{N/K}. \eqn{K}
+should be chosen such that \eqn{N} is divisible by \eqn{K}.
 }
 \item{alpha}{
 The network density. A value in \eqn{[0,1]} defining the frequency of connections
@@ -31,10 +31,10 @@ network is generated.
 }
 
 \details{
-For each couple of nodes it performs a Bernoulli trial with values 1 "draw an edge", 0 "otherwise".
-The probabilities of these trials are bigger if the two nodes are in the same block, lower otherwise, and they are specified based on the number of nodes on the network \code{N} and network density \code{alpha}.
-Probability to draw an edge for a couple of nodes in the same block: \eqn{\alpha*N^{-0.3}}.
-Probability to draw an edge for a couple of nodes in different blocks: \eqn{\alpha*N^{-1}}.
+For each pair of nodes it performs a Bernoulli trial with values 1 "draw an edge", 0 "otherwise".
+The probabilities of these trials are bigger if the two nodes are in the same block, lower otherwise, and they are specified based on the number of nodes on the network \eqn{N} and network density \eqn{alpha}:
+Probability to draw an edge for a pair of nodes in the same block: \eqn{\alpha*N^{-0.3}}.
+Probability to draw an edge for a pair of nodes in different blocks: \eqn{\alpha*N^{-1}}.
 }
 
 

@@ -5,11 +5,13 @@ rcopula <- function(n, N, copula = "gaussian", corrtype = "equicorrelation", rho
     if ( !is.null(cholR) ) {
 
       if ( copula == "gaussian" ) {
-        z <- Rfast::matrnorm(n, N)
-        z %*% cholR
+        #Rfast::matrnorm(n, N, seed = seed)
+        z <- matrix( rnorm(n * N), ncol = N )
+        z <- z %*% cholR
         u <- pnorm(z)
       } else if ( copula == "t" ) {
-        z <- Rfast::matrnorm(n, N)
+        #z <- Rfast::matrnorm(n, N, seed = seed)
+        z <- matrix( rnorm(n * N), ncol = N )
         w <- sqrt( dof / rchisq(n, dof) )
         z <- w * (z %*% cholR)
         u <- pt(z, dof)
@@ -26,10 +28,14 @@ rcopula <- function(n, N, copula = "gaussian", corrtype = "equicorrelation", rho
       }
 
       if ( copula == "gaussian" ) {
-        z <- Rfast::rmvnorm(n, numeric(N), R)
+        #z <- Rfast::rmvnorm(n, numeric(N), R, seed = seed)
+        z <- matrix( rnorm(n * N), ncol = N) %*% chol(R)
         u <- pnorm(z)
       } else if ( copula == "t" ) {
-        z <- Rfast::rmvt(n, numeric(N), R, v = dof)
+        #z <- Rfast::rmvt(n, numeric(N), R, v = dof)
+        z <- matrix( rnorm(n * N), ncol = N )
+        w <- sqrt( dof / rchisq(n, dof))
+        z <- w * ( z %*% chol(R) )
         u <- pt(z, dof)
       }  ##  end  if ( copula == "gaussian" ) {
 

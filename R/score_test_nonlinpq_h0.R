@@ -9,9 +9,10 @@ score_test_nonlinpq_h0 <- function(b, y, W, p, d, Z = NULL) {
       stop('The matrix of covariates Z contains negative values.')
     }
     Z <- model.matrix(~., as.data.frame(Z))
-    Z <- Z[1:dim(y)[1], -1, drop = FALSE]
+    Z <- Z[1:dim(y)[2], -1, drop = FALSE]
   }
 
+  y <- t(y)
   W <- W / Rfast::rowsums(W)
   W[ is.na(W) ] <- 0
 
@@ -61,8 +62,19 @@ score_test_nonlinpq_h0 <- function(b, y, W, p, d, Z = NULL) {
 
   stat <- as.numeric(S[m])^2 / as.numeric(Sigma)
   pvalue <- pchisq(stat, 1, lower.tail = FALSE)
-  list(stat = stat, pvalue = pvalue)
 
+  statistic <- stat  ;   names(statistic) <- "chi-square-test statistic"
+  parameter <- 1     ;   names(parameter) <- "df"
+  p.value <- pvalue
+  null.value <- 0
+  names(null.value) <- "True gamma parameter is equal to 0"
+  alternative <- "True gamma parameter is greater than 0"
+  method <- "Linearity test against non-linear ID-PNAR(p) model"
+  data.name <- c( "coefficients of the PNAR(p, q)/", "time series data/", "order/", "lag/", "covariates/" )
+  result <- list( statistic = statistic, parameter = parameter, p.value = p.value,
+                  alternative = alternative, method = method, data.name = data.name )
+  class(result) <- "htest"
+  return(result)
 }
 
 

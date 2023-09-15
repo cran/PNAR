@@ -35,12 +35,13 @@ global_optimise_LM_stnarpq <- function(gama_L = NULL, gama_U = NULL, len = 10, b
       stop('The matrix of covariates Z contains negative values.')
     }
     Z <- model.matrix(~., as.data.frame(Z))
-    Z <- Z[1:dim(y)[1], -1, drop = FALSE]
+    Z <- Z[1:dim(y)[2], -1, drop = FALSE]
   }
 
+  y <- t(y)
   W <- W / Rfast::rowsums(W)
   W[ is.na(W) ] <- 0
-  dm <- dim(y)    ;    N <- dm[1]    ;    TT <- dm[2]
+  dm <- dim(y)   ;    N <- dm[1]    ;    TT <- dm[2]
 
   dimz <- ( !is.null(Z) ) * NCOL(Z)
   m <- 1 + 3 * p + max(0, dimz)

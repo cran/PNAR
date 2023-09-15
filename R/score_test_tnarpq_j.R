@@ -36,12 +36,13 @@ score_test_tnarpq_j <- function(supLM, b, y, W, p, d, Z = NULL, J = 499, gama_L 
       stop('The matrix of covariates Z contains negative values.')
     }
     Z <- model.matrix(~., as.data.frame(Z))
-    Z <- Z[1:dim(y)[1], -1, drop = FALSE]
+    Z <- Z[1:dim(y)[2], -1, drop = FALSE]
   }
 
+  y <- t(y)
   W <- W / Rfast::rowsums(W)
   W[ is.na(W) ] <- 0
-  dm <- dim(y)    ;    N <- dm[1]    ;    TT <- dm[2]
+  dm <- dim(y)   ;    N <- dm[1]    ;    TT <- dm[2]
 
   pp <- 1 + 2 * p
   dimz <- ( !is.null(Z) ) * NCOL(Z)

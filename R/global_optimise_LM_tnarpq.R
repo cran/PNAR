@@ -35,12 +35,13 @@ global_optimise_LM_tnarpq <- function(gama_L = NULL, gama_U = NULL, len = 10, b,
       stop('The matrix of covariates Z contains negative values.')
     }
     Z <- model.matrix(~., as.data.frame(Z))
-    Z <- Z[1:dim(y)[1], -1, drop = FALSE]
+    Z <- Z[1:dim(y)[2], -1, drop = FALSE]
   }
 
+  y <- t(y)
   W <- W / Rfast::rowsums(W)
   W[ is.na(W) ] <- 0
-  dm <- dim(y)    ;    N <- dm[1]    ;    TT <- dm[2]
+  dm <- dim(y)   ;    N <- dm[1]    ;    TT <- dm[2]
   pp <- 1 + 2 * p
   dimz <- ( !is.null(Z) ) * NCOL(Z)
   m <- 2 * pp + max(0, dimz)
@@ -58,7 +59,7 @@ global_optimise_LM_tnarpq <- function(gama_L = NULL, gama_U = NULL, len = 10, b,
   solveHmpp <- solve(H)
   k <- rep( 1:c(TT - p), each = N )
 
-  nullgama_L <- is.null(gama_L) 
+  nullgama_L <- is.null(gama_L)
   gami <- supLMi <- numeric(len - 1)
   if ( is.null(gama_L)  &  is.null(gama_U) ) {
     qq2 <- Rfast2::rowQuantile( z, probs = c(0.2, 0.8) )

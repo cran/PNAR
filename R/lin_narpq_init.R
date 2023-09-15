@@ -9,9 +9,10 @@ lin_narpq_init <- function(y, W, p, Z = NULL) {
       stop('The matrix of covariates Z contains negative values.')
     }
     Z <- model.matrix(~., as.data.frame(Z))
-    Z <- Z[1:dim(y)[1], -1, drop = FALSE]
+    Z <- Z[1:dim(y)[2], -1, drop = FALSE]
   }
 
+  y <- t(y)
   W <- W / Rfast::rowsums(W)
   W[ is.na(W) ] <- 0
 

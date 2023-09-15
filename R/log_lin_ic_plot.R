@@ -6,9 +6,10 @@ log_lin_ic_plot <- function(y, W, p = 1:10, Z = NULL, uncons = FALSE) {
 
   if ( !is.null(Z) ) {
     Z <- model.matrix( ~., as.data.frame(Z) )
-    Z <- Z[1:dim(y)[1], -1, drop = FALSE]
+    Z <- Z[1:dim(y)[2], -1, drop = FALSE]
   }
 
+  y <- t(y)
   W <- W / Rfast::rowsums(W)
   W[ is.na(W) ] <- 0
 

@@ -17,7 +17,7 @@ lin_narpq_init(y, W, p, Z = NULL)
 
 \arguments{
 \item{y}{
-An \eqn{N} x \eqn{TT} numerical matrix with the \eqn{N} multivariate
+A \eqn{TT} x \eqn{N} time series object or a \eqn{TT} x \eqn{N} numerical matrix with the \eqn{N} multivariate
 count time series over \eqn{TT} time periods.
 }
 \item{W}{

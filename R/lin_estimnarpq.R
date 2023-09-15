@@ -110,7 +110,7 @@
 ##    Z = Nxq matrix of covariates (one for each column), where q is the number of
 ##        covariates in the model. They must be non-negative
 ##  output:
-##    coeflin = estimated QMLE coefficients
+##    coefs = estimated QMLE coefficients
 ##    selin = standard errors estimates
 ##    tlin = t test estimates
 ##    score = value of the score at the optimization point
@@ -130,9 +130,10 @@ lin_estimnarpq <- function(y, W, p, Z = NULL, uncons = FALSE, init = NULL, xtol_
       stop('The matrix of covariates Z contains negative values.')
     }
     Z <- model.matrix(~., as.data.frame(Z))
-    Z <- Z[1:dim(y)[1], -1, drop = FALSE]
+    Z <- Z[1:dim(y)[2], -1, drop = FALSE]
   }
 
+  y <- t(y)
   W <- W / Rfast::rowsums(W)
   W[ is.na(W) ] <- 0
 
@@ -201,7 +202,17 @@ lin_estimnarpq <- function(y, W, p, Z = NULL, uncons = FALSE, init = NULL, xtol_
   qic_lins <- 2 * sum( H_lins * V_lins ) + 2 * s_qmle$objective
 
   coeflin <- cbind(coeflin, SE_lins, tlin, pval)
-  colnames(coeflin) <- c("Estimate", "Std. Error", "Z-stat", "p-value")
+  colnames(coeflin) <- c("Estimate", "Std. Error", "z value", "Pr(>|z|)")
+  coeflin <- as.data.frame(coeflin)
+  a <- pval
+  a[ which(pval > 0.1) ]   <- c("   ")
+  a[ which(pval < 0.1) ]   <- c(".  ")
+  a[ which(pval < 0.05) ]  <- c("*  ")
+  a[ which(pval < 0.01) ]  <- c("** ")
+  a[ which(pval < 0.001) ] <- c("***")
+  coeflin <- cbind(coeflin, a)
+  colnames(coeflin)[5] <- ""
+
   if ( !is.null( dim(Z) ) ) {
     rownames(coeflin) <- rownames(S_lins) <-  c( "beta0", paste("beta1", 1:p, sep =""), paste("beta2", 1:p, sep =""),
                                                  paste("delta", 1:dim(Z)[2], sep = "") )
@@ -221,7 +232,9 @@ lin_estimnarpq <- function(y, W, p, Z = NULL, uncons = FALSE, init = NULL, xtol_
  #   }
  # }
 
-  list( coeflin = coeflin, score = S_lins, loglik = loglik, ic = ic )
+  result <- list( coefs = coeflin, score = S_lins, loglik = loglik, ic = ic )
+  class(result) <- "PNAR"
+  return(result)
 }
 
 

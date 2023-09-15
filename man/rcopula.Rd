@@ -22,7 +22,7 @@ The number of random values to generate.
 The number of variables for which random valeus will be generated.
 }
 \item{copula}{
-Which copula function to use? The "gaussian", "t", or "clayton"?
+Which copula function to use? The "gaussian", "t", or "clayton".
 }
 \item{rho}{
 The the value of the copula parameter (\eqn{\rho}).
@@ -53,7 +53,7 @@ structures.
 }
 
 \value{
-An \code{n} x \code{N} matrix with the simulated copula values.
+An \eqn{n \times N} matrix with the simulated copula values.
 }
 
 \references{

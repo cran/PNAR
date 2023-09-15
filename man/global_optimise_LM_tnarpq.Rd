@@ -18,14 +18,10 @@ p, d, Z = NULL, tol = 1e-9)
 
 \arguments{
 \item{gama_L}{
-The lower value of the \eqn{\gamma} values to consider. If you do not know the
-value leave it NULL and it will be computed internally. See the details for
-information about default computation.
+The lower value of the \eqn{\gamma} values to consider. Use NULL if there is not information about its value.. See the details for default computation.
 }
 \item{gama_U}{
-The upper value of the \eqn{\gamma} values to consider. If you do not know the
-value leave it NULL and it will be computed internally. See the details for
-information about default computation.
+The upper value of the \eqn{\gamma} values to consider. Use NULL if there is not information about its value.. See the details for default computation.
 }
 \item{len}{
 The number of increments to consider for the \eqn{\gamma} parameter.
@@ -33,14 +29,13 @@ The number of increments to consider for the \eqn{\gamma} parameter.
 \item{b}{
 The estimated parameters from the linear model, in the following order:
 (intercept, network parameters, autoregressive parameters, covariates).
-The dimension of the vector should be 2\code{p} + 1 + number of covariates.
+The dimension of the vector should be \eqn{2p + 1 + q}, where \eqn{q} denotes the number of covariates.
 }
 \item{y}{
-An \eqn{N} x \eqn{TT} numerical matrix with the \eqn{N} multivariate
-count time series over \eqn{TT} time periods.
+A \eqn{TT \times N} time series object or a \eqn{TT \times N} numerical matrix with the \eqn{N} multivariate count time series over \eqn{TT} time periods.
 }
 \item{W}{
-The \eqn{N} x \eqn{N} row-normalized non-negative adjacency matrix describing
+The \eqn{N \times N} row-normalized non-negative adjacency matrix describing
 the network. The main diagonal entries of the matrix should be zeros, all the
 other entries should be non-negative and the maximum sum of elements over the
 rows should equal one. The function row-normalizes the matrix if a non-normalized
@@ -50,28 +45,25 @@ adjacency matrix is provided.
 The number of lags in the model.
 }
 \item{d}{
-The lag parameter of non-linear variable (should be between 1 and p).
+The lag parameter of non-linear variable (should be between 1 and \eqn{p}).
 }
 \item{Z}{
 An \eqn{N} x \eqn{q} matrix of covariates (one for each column), where \eqn{q}
 is the number of covariates in the model. Note that they must be non-negative.
 }
 \item{tol}{
-The tolerance level for the optimizer.
+Tolerance level for the optimizer.
 }
 }
 
 \details{
 The function optimizes the quasi score test statistic, under the null assumption of linearity,
-for testing linearity of Poisson Network Autoregressive model of order \eqn{p} against the following T-PNAR(\eqn{p})
-model, with respect to the unknown nuisance parameter (\eqn{\gamma}). For each node of the network \eqn{i=1,...,N} over
+for testing linearity of Poisson Network Autoregressive model of order \eqn{p} against the following T-PNAR(\eqn{p}) model, with respect to the unknown nuisance parameter (\eqn{\gamma}). For each node of the network \eqn{i=1,...,N} over
 the time sample \eqn{t=1,...,TT}
 \deqn{
-\lambda_{i,t}=\beta_{0}+\sum_{h=1}^{p}\beta_{1h}X_{i,t-h}+\beta_{2h}Y_{i,t-h}+(\alpha_{0}+\alpha_{1h}X_{i,t-h}
-+\alpha_{2h}Y_{i,t-h})I(X_{i,t-d}\leq\gamma)+\sum_{l=1}^{q}\delta_{l}Z_{i,l}
+\lambda_{i,t}=\beta_{0}+\sum_{h=1}^{p}\left[\beta_{1h}X_{i,t-h}+\beta_{2h}Y_{i,t-h}+(\alpha_{0}+\alpha_{1h}X_{i,t-h} +\alpha_{2h}Y_{i,t-h})I(X_{i,t-d}\leq\gamma)\right]+\sum_{l=1}^{q}\delta_{l}Z_{i,l}
 }
-where \eqn{X_{i,t}=\sum_{j=1}^{N} W_{ij}Y_{j,t}} is the network effect, i.e. the weighted average impact of node \eqn{i}
-connections, with the weights of the mean being \eqn{W_{ij}}, the single element of the network matrix \eqn{W}, and \eqn{I()} is the indicator function. The sequence \eqn{\lambda_{t}} is the expectation of \eqn{Y_{t}} conditional to its past values.
+where \eqn{X_{i,t}=\sum_{j=1}^{N} W_{ij}Y_{j,t}} is the network effect, i.e. the weighted average impact of node \eqn{i} connections, with the weights of the mean being \eqn{W_{ij}}, the single element of the network matrix \eqn{W}, and \eqn{I()} is the indicator function. The sequence \eqn{\lambda_{i,t}} is the expectation of \eqn{Y_{i,t}}, conditional to its past values.
 
 The null hypothesis of the test is defined as \eqn{H_{0}: \alpha_{0}=\alpha_{11}=...=\alpha_{2p}=0}, versus the alternative that at least one among \eqn{\alpha_{s,h}} is not \eqn{0}, for \eqn{s=0,1,2}. The test statistic has the form
 \deqn{
@@ -83,7 +75,7 @@ S(\hat{\theta},\gamma)=\sum_{t=1}^{TT}\sum_{i=1}^{N}\left(\frac{Y_{i,t}}{\lambda
 }
 is the partition of the quasi score related to the vector of non-linear parameters \eqn{\alpha=(\alpha_{0},...,\alpha_{2p})}, evaluated at the estimated parameters \eqn{\hat{\theta}} under the null assumption \eqn{H_{0}} (linear model) and \eqn{\Sigma(\hat{\theta},\gamma)} is the variance of \eqn{S(\hat{\theta},\gamma)}.
 
-The optimization employes the Brent algorithm applied in the interval from \code{gama_L} to \code{gama_U}. To be sure that the global optimum is found, the optimization is performed at (\code{len}-1) consecutive equidistant sub-intervals and then the maximum over them is taken as global optimum.
+The optimization employes the Brent algorithm (Brent, 1973) applied in the interval from \code{gama_L} to \code{gama_U}. To be sure that the global optimum is found, the optimization is performed at (\code{len}-1) consecutive equidistant sub-intervals and then the maximum over them is taken as global optimum.
 
 The values of \code{gama_L} and \code{gama_U} are computed internally as the mean over \eqn{i=1,...,N} of \eqn{20\%} and \eqn{80\%} quantile of the empirical distribution of the network mean \eqn{X_{i,t}} for \eqn{t=1,...,TT}. In this way the optimization is performed for values of \eqn{\gamma} such that the indicator function \eqn{I(X_{i,t-d}\leq\gamma)} is not always close to 0 or 1. Alternatively, their value can be supplied by the user. For details see Armillotta and Fokianos (2022b, Sec. 4-5).
 }
@@ -112,6 +104,9 @@ autoregressive models.
 Armillotta, M., Tsagris, M. and Fokianos, K. (2022c). The R-package PNAR
 for modelling count network time series.
 \url{https://arxiv.org/abs/2211.02582}
+
+Brent, R. (1973) Algorithms for Minimization without Derivatives.
+Prentice-Hall, Englewood Cliffs N.J.
 }
 
 \author{
@@ -128,7 +123,7 @@ Mirko Armillotta, Michail Tsagris and Konstantinos Fokianos.
 data(crime)
 data(crime_W)
 mod1 <- lin_estimnarpq(crime, crime_W, p = 2)
-b <- mod1$coeflin
+b <- mod1$coefs[, 1]
 global_optimise_LM_tnarpq(b = b, y = crime, W = crime_W, p = 2, d = 1)
 }
 

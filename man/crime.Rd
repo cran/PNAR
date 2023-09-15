@@ -10,7 +10,7 @@ Monthly number of burglaries on the south side of Chicago (552 blocks) during
 }
 \usage{crime}
 \format{
-A matrix with 552 rows and 72 columns.
+A time series object ("ts" class) with multivariate time series, a matrix with 72 rows and 552 columns.
 }
 \source{
 Clark and Dixon (2021), available at \url{https://github.com/nick3703/Chicago-Data}.
@@ -26,6 +26,6 @@ self-exciting statistical models. \emph{Spatial Statistics}, 43, 1-18.
 \examples{
 data(crime)
 data(crime_W)
-mod1 <- lin_estimnarpq(crime, crime_W, p = 1)
-mod2 <- log_lin_estimnarpq(crime, crime_W, p = 1)
+mod1 <- lin_estimnarpq( crime, crime_W, p = 1)
+mod2 <- log_lin_estimnarpq( crime, crime_W, p = 1)
 }

@@ -24,14 +24,13 @@ The optimized value of the test statistic. See the function
 \item{b}{
 The estimated parameters from the linear model, in the following order:
 (intercept, network parameters, autoregressive parameters, covariates).
-The dimension of the vector should be 2\code{p} + 1 + number of covariates.
+The dimension of the vector should be \eqn{2p + 1 + q}, where \eqn{q} denotes the number of covariates.
 }
 \item{y}{
-An \eqn{N} x \eqn{TT} numerical matrix with the \eqn{N} multivariate
-count time series over \eqn{TT} time periods.
+A \eqn{TT \times N} time series object or a \eqn{TT \times N} numerical matrix with the \eqn{N} multivariate count time series over \eqn{TT} time periods.
 }
 \item{W}{
-The \eqn{N} x \eqn{N} row-normalized non-negative adjacency matrix describing
+The \eqn{N \times N} row-normalized non-negative adjacency matrix describing
 the network. The main diagonal entries of the matrix should be zeros,
 all the other entries should be non-negative and the maximum sum of elements
 over the rows should equal one. The function row-normalizes the matrix if a
@@ -41,10 +40,10 @@ non-normalized adjacency matrix is provided.
 The number of lags in the model.
 }
 \item{d}{
-The lag parameter of non-linear variable (should be between 1 and p).
+The lag parameter of non-linear variable (should be between 1 and \eqn{p}).
 }
 \item{Z}{
-An \eqn{N} x \eqn{q} matrix of covariates (one for each column), where \eqn{q}
+An \eqn{N \times q} matrix of covariates (one for each column), where \eqn{q}
 is the number of covariates in the model. Note that they must be non-negative.
 }
 \item{J}{
@@ -52,33 +51,33 @@ The number of bootstrap samples to draw.
 }
 \item{gama_L}{
 The lower value of the nuisance parameter \eqn{\gamma} to consider.
-If you do not know the value leave it NULL and it will be computed internally.
-See the details for information about default computation.
+Use NULL if there is not information about its value.
+See the details for default computation.
 }
 \item{gama_U}{
 The upper value of the nuisance parameter \eqn{\gamma} to consider.
-If you do not know the value leave it NULL and it will be computed internally.
-See the details for information about default computation.
+Use NULL if there is not information about its value.
+See the details for default computation.
 }
 \item{tol}{
-The tolerance level for the optimizer.
+Tolerance level for the optimizer.
 }
 \item{ncores}{
-The number of cores to use for parallel computing. By default the number of
+Number of cores to use for parallel computing. By default the number of
 cores is set to 1 (no parallel computing). \bold{Note:} If for some reason the
 parallel does not work then load the doParallel package yourseleves.
 }
 \item{seed}{
-If you want the same to be generated again use a seed for the generator, an integer number.
+To replicate the results use a seed for the generator, an integer number.
 }
 }
 
 \details{
 The function computes a bootstrap p-value for the sup-type test for testing linearity of Poisson Network Autoregressive model of order \eqn{p} (PNAR(\eqn{p})) versus the following Threshold alternative (T-PNAR(\eqn{p})). For each node of the network \eqn{i=1,...,N} over the time sample \eqn{t=1,...,TT}
 \deqn{
-\lambda_{i,t}=\beta_{0}+\sum_{h=1}^{p}\beta_{1h}X_{i,t-h}+\beta_{2h}Y_{i,t-h}+(\alpha_{0}+\alpha_{1h}X_{i,t-h}+\alpha_{2h}Y_{i,t-h})I(X_{i,t-d}\leq\gamma)+\sum_{l=1}^{q}\delta_{l}Z_{i,l}
+\lambda_{i,t}=\beta_{0}+\sum_{h=1}^{p}\left[\beta_{1h}X_{i,t-h}+\beta_{2h}Y_{i,t-h}+(\alpha_{0}+\alpha_{1h}X_{i,t-h}+\alpha_{2h}Y_{i,t-h})I(X_{i,t-d}\leq\gamma)\right]+\sum_{l=1}^{q}\delta_{l}Z_{i,l}
 }
-where \eqn{X_{i,t}=\sum_{j=1}^{N}W_{ij}Y_{j,t}} is the network effect, i.e. the weighted average impact of node \eqn{i} connections, with the weights of the mean being \eqn{W_{ij}}, the single element of the network matrix \eqn{W}. The sequence \eqn{\lambda_{t}} is the expectation of \eqn{Y_{t}} conditional to its past values.
+where \eqn{X_{i,t}=\sum_{j=1}^{N}W_{ij}Y_{j,t}} is the network effect, i.e. the weighted average impact of node \eqn{i} connections, with the weights of the mean being \eqn{W_{ij}}, the single element of the network matrix \eqn{W}. The sequence \eqn{\lambda_{i,t}} is the expectation of \eqn{Y_{i,t}}, conditional to its past values.
 
 The null hypothesis of the test is defined as \eqn{H_{0}: \alpha_{0}=\alpha_{11}=...=\alpha_{2p}=0}, versus the alternative that at least one among \eqn{\alpha_{s,h}} is not \eqn{0}, for \eqn{s=0,1,2}. The test statistic has the form
 \deqn{
@@ -96,7 +95,7 @@ The function performs the bootstrap resampling of the test statistic \eqn{\sup_{
 
 The values of \code{gama_L} and \code{gama_U} are computed internally as the mean over \eqn{i=1,...,N} of \eqn{20\%} and \eqn{80\%} quantiles of the empirical distribution of the network mean \eqn{X_{i,t}} for \eqn{t=1,...,TT}. In this way the optimization is performed for values of \eqn{\gamma} such that the indicator function \eqn{I(X_{i,t-d}\leq\gamma)} is not always close to 0 or 1. Alternatively, their value can be supplied by the user. For details see Armillotta and Fokianos (2022b, Sec. 4-5).
 
-\bold{Note:} Please note that for large datasets the function may require few minutes to run. Parallel computing is suggested to speed up the computations.
+\bold{Note:} For large datasets the function may require few minutes to run. Parallel computing is suggested to speed up the computations.
 }
 
 \value{
@@ -145,7 +144,7 @@ data(crime)
 data(crime_W)
 #estimate linear PNAR model
 mod1 <- lin_estimnarpq(crime, crime_W, p = 2)
-b <- mod1$coeflin[, 1]
+b <- mod1$coefs[, 1]
 \donttest{
 g <- global_optimise_LM_tnarpq(b = b, y = crime, W = crime_W, p = 2, d = 1)
 supg <- g$supLM

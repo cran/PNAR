@@ -9,9 +9,10 @@ score_test_stnarpq_DV <- function(b, y, W, p, d, Z = NULL, gama_L = NULL, gama_U
       stop('The matrix of covariates Z contains negative values.')
     }
     Z <- model.matrix(~., as.data.frame(Z))
-    Z <- Z[1:dim(y)[1], -1, drop = FALSE]
+    Z <- Z[1:dim(y)[2], -1, drop = FALSE]
   }
 
+  y <- t(y)
   W <- W / Rfast::rowsums(W)
   W[ is.na(W) ] <- 0
 
@@ -106,9 +107,21 @@ score_test_stnarpq_DV <- function(b, y, W, p, d, Z = NULL, gama_L = NULL, gama_U
 
   supLM <- as.numeric( max(-LMv) )
   DV <- 1 - pchisq(supLM, p) + V * supLM^(0.5 * (p - 1)) * exp(-0.5 * supLM) * 2^(-0.5 * p) / gamma(p/2)
-  list(DV = DV, supLM = supLM)
-}
 
+  statistic <- supLM  ;   names(statistic) <- "chi-square-test statistic"
+  parameter <- p      ;   names(parameter) <- "df"
+  p.value <- DV
+  null.value <- 0
+  names(null.value) <- "All coefficients of the non-linear component are equal to 0"
+  alternative <- "At least one coefficient of the non-linear component is not zero"
+  method <- "Test for linearity of PNAR(p) versus the non-linear ST-PNAR(p)"
+  data.name <- c( "coefficients of the PNAR(p, q)/", "time series data/", "order/",
+                  "lag/", "covariates/", "lower gamma/", "upper gamma/", "length" )
+  result <- list( statistic = statistic, parameter = parameter, p.value = p.value,
+                  alternative = alternative, method = method, data.name = data.name )
+  class(result) <- "htest"
+  return(result)
+}
 
 
 
