@@ -1,8 +1,8 @@
 Package: PNAR
 Type: Package
 Title: Poisson Network Autoregressive Models
-Version: 1.5
-Date: 2023-09-15
+Version: 1.6
+Date: 2023-10-09
 Authors@R: c(
            person( "Michail", "Tsagris", role = c("aut", "cre"), email = "mtsagris@uoc.gr" ),
            person( "Mirko", "Armillotta", role = c("aut", "cph"), email = "armillotta.mirko.ucy.ac.cy" ),
@@ -18,6 +18,6 @@ Imports: doParallel, foreach, igraph, nloptr, parallel, Rfast, Rfast2,
 License: GPL (>= 2)
 LazyData: true
 NeedsCompilation: no
-Packaged: 2023-09-15 19:10:54 UTC; mtsag
+Packaged: 2023-10-09 10:35:06 UTC; mtsag
 Repository: CRAN
-Date/Publication: 2023-09-15 21:22:06 UTC
+Date/Publication: 2023-10-09 13:40:14 UTC

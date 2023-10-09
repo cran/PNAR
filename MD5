@@ -1,4 +1,4 @@
-3b366269a81ff321f8d572350572c401 *DESCRIPTION
+718a6690bc467ca2cb215612f8a29490 *DESCRIPTION
 6fbe0512b4ff88301ea2622fa39849c7 *NAMESPACE
 6840964a4cbf87a22363adf61b6e9733 *R/adja.R
 d395e606ee61cb78eed73f35f1c06af7 *R/adja_gnp.R
@@ -6,10 +6,10 @@ d395e606ee61cb78eed73f35f1c06af7 *R/adja_gnp.R
 b81f07f90c82982be16f4ec4ab8ae5f8 *R/global_optimise_LM_stnarpq.R
 cbbe52a0753571b2275cc964d2af85b3 *R/global_optimise_LM_tnarpq.R
 46bf63f3b77f0f32cb79bf1d47879bbe *R/lin_estimnarpq.R
-654bbdd88de6e6d48b17ca6dd905751b *R/lin_ic_plot.R
+194d5feaa452ffc7e9560cfba878c04b *R/lin_ic_plot.R
 2bb25b727208fde6a5e1c233ddc0cf86 *R/lin_narpq_init.R
 0e18ce035b108c14d7e3bfefd369fdf8 *R/log_lin_estimnarpq.R
-0136c9be0f1401dff7ac36e18f0984cc *R/log_lin_ic_plot.R
+c5ab01fe37d72c2e7344b326f2964a8d *R/log_lin_ic_plot.R
 a415bbb6157a3088fb923467373fd872 *R/log_lin_narpq_init.R
 3c5d313c527af730cf8673dc693ba793 *R/onAttach.R
 7a1aac1134177498863fbc91ffedf707 *R/poisson.MODpq.R
@@ -27,7 +27,7 @@ ed9ad952e8c9f52c704e98ab8f07be78 *R/summary.PNAR.R
 049c4cd8317ae34f4a75089d1e23ba49 *R/summary.nonlin.R
 5a9d4314362f69693c98e6ff62c1a533 *data/crime.rda
 90a16c5368e6c282082c6464e2cc3879 *data/crime_W.rda
-8d5898bc0ffe8231d2cbd3d8dbaa87a9 *man/PNAR-package.Rd
+09ced083a5db8c7d12f9503c5c7e49df *man/PNAR-package.Rd
 587e9c1ab104ca71dab8e6144571575d *man/adja.Rd
 cb938bf91eae10c4d532ac819fc2d688 *man/adja_gnp.Rd
 da5b75731b6ea8205c5470b3eb003a1f *man/crime.Rd
@@ -36,10 +36,10 @@ f841719246b99739b2bf0be1a9367fcb *man/getN.Rd
 b0821d378ee39792383ac2915b68ea08 *man/global_optimise_LM_stnarpq.Rd
 a61819a5ef1b6911c05d7658935471d3 *man/global_optimise_LM_tnarpq.Rd
 69efd95c43a50d7eb6881b855ff6b752 *man/lin_estimnarpq.Rd
-e581d59e680f3f8113f697db46662eaf *man/lin_ic_plot.Rd
+48a313b25ba3f6f3f82c04a15887be90 *man/lin_ic_plot.Rd
 df903d4f42b11e25fdb1d6904aecf51f *man/lin_narpq_init.Rd
 957962afaf2af8201e61f41df0748a0e *man/log_lin_estimnarpq.Rd
-022b46388c6f87133be74b69afdff566 *man/log_lin_ic_plot.Rd
+8ba844e9adea308be35906e0442950e3 *man/log_lin_ic_plot.Rd
 1a0ff5c9834f638555257b6ed226f7e2 *man/log_lin_narpq_init.Rd
 0277e4a4c3b98425f7153118378cff11 *man/poisson.MODpq.Rd
 b49d48cf6d92bee45c068835dbfec81d *man/poisson.MODpq.log.Rd

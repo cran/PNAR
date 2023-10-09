@@ -12,7 +12,7 @@ Scatter plot of information criteria versus the number of lags in log-linear Poi
 }
 
 \usage{
-log_lin_ic_plot(y, W, p = 1:10, Z = NULL, uncons = FALSE)
+log_lin_ic_plot(y, W, p = 1:10, Z = NULL, uncons = FALSE, ic = "QIC")
 }
 
 \arguments{
@@ -36,20 +36,23 @@ An \eqn{N} x \eqn{q} matrix of covariates (one for each column), where \eqn{q}
 is the number of covariates in the model. Note that they must be non-negative.
 }
 \item{uncons}{
-logical, if TRUE an unconstrained optimization without stationarity
+Logical, if TRUE an unconstrained optimization without stationarity
 constraints is performed (default is FALSE).
+}
+\item{ic}{
+The information criterion you want to plot, "QIC" (default value), "AIC" or "BIC".
 }
 }
 
 \details{
 The function computes the AIC, BIC or QIC for a range of lag orders of the
-linear Poisson Network Autoregressive model of order \eqn{p} with \eqn{q}
+log-linear Poisson Network Autoregressive model of order \eqn{p} with \eqn{q}
 covariates (PNAR(\eqn{p})).
 }
 
 \value{
-Three scatter plots with the lag order versus AIC, BIC and QIC and a matrix
-with three columns, the AIC, BIC and QIC for each lag order.
+A scatter plot with the lag order versus either QIC (default), AIC or BIC, and a vector
+with their values, for each lag order.
 }
 
 \references{

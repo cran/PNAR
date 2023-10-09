@@ -14,8 +14,8 @@ Quasi likelihood-based methods for estimating linear and log-linear Poisson Netw
 \tabular{ll}{
 Package: \tab PNAR\cr
 Type: \tab Package\cr
-Version: \tab 1.5\cr
-Date: \tab 2023-09-15\cr
+Version: \tab 1.6\cr
+Date: \tab 2023-10-09\cr
 License: \tab GPL(>=2)\cr
 }
 }
