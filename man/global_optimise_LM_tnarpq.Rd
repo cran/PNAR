@@ -61,7 +61,7 @@ The function optimizes the quasi score test statistic, under the null assumption
 for testing linearity of Poisson Network Autoregressive model of order \eqn{p} against the following T-PNAR(\eqn{p}) model, with respect to the unknown nuisance parameter (\eqn{\gamma}). For each node of the network \eqn{i=1,...,N} over
 the time sample \eqn{t=1,...,TT}
 \deqn{
-\lambda_{i,t}=\beta_{0}+\sum_{h=1}^{p}\left[\beta_{1h}X_{i,t-h}+\beta_{2h}Y_{i,t-h}+(\alpha_{0}+\alpha_{1h}X_{i,t-h} +\alpha_{2h}Y_{i,t-h})I(X_{i,t-d}\leq\gamma)\right]+\sum_{l=1}^{q}\delta_{l}Z_{i,l}
+\lambda_{i,t}=\beta_{0}+\sum_{h=1}^{p}\left[\beta_{1h}X_{i,t-h}+\beta_{2h}Y_{i,t-h}+(\alpha_{0}+\alpha_{1h}X_{i,t-h} +\alpha_{2h}Y_{i,t-h})I(X_{i,t-d}\leq\gamma)\right]+ \sum_{l=1}^{q}\delta_{l}Z_{i,l}
 }
 where \eqn{X_{i,t}=\sum_{j=1}^{N} W_{ij}Y_{j,t}} is the network effect, i.e. the weighted average impact of node \eqn{i} connections, with the weights of the mean being \eqn{W_{ij}}, the single element of the network matrix \eqn{W}, and \eqn{I()} is the indicator function. The sequence \eqn{\lambda_{i,t}} is the expectation of \eqn{Y_{i,t}}, conditional to its past values.
 
@@ -77,7 +77,7 @@ is the partition of the quasi score related to the vector of non-linear paramete
 
 The optimization employes the Brent algorithm (Brent, 1973) applied in the interval from \code{gama_L} to \code{gama_U}. To be sure that the global optimum is found, the optimization is performed at (\code{len}-1) consecutive equidistant sub-intervals and then the maximum over them is taken as global optimum.
 
-The values of \code{gama_L} and \code{gama_U} are computed internally as the mean over \eqn{i=1,...,N} of \eqn{20\%} and \eqn{80\%} quantile of the empirical distribution of the network mean \eqn{X_{i,t}} for \eqn{t=1,...,TT}. In this way the optimization is performed for values of \eqn{\gamma} such that the indicator function \eqn{I(X_{i,t-d}\leq\gamma)} is not always close to 0 or 1. Alternatively, their value can be supplied by the user. For details see Armillotta and Fokianos (2022b, Sec. 4-5).
+The values of \code{gama_L} and \code{gama_U} are computed internally as the mean over \eqn{i=1,...,N} of \eqn{20\%} and \eqn{80\%} quantile of the empirical distribution of the network mean \eqn{X_{i,t}} for \eqn{t=1,...,TT}. In this way the optimization is performed for values of \eqn{\gamma} such that the indicator function \eqn{I(X_{i,t-d}\leq\gamma)} is not always close to 0 or 1. Alternatively, their value can be supplied by the user. For details see Armillotta and Fokianos (2023, Sec. 4-5).
 }
 
 \value{
@@ -94,16 +94,11 @@ A vector with the extremes points of sub-intervals.
 }
 
 \references{
-Armillotta, M. and K. Fokianos (2022a). Poisson network autoregression.
-\url{https://arxiv.org/abs/2104.06296}
+Armillotta, M. and K. Fokianos (2023). Nonlinear network autoregression. \emph{Annals of Statistics}, 51(6): 2526--2552.
 
-Armillotta, M. and K. Fokianos (2022b). Testing linearity for network
-autoregressive models.
-\url{https://arxiv.org/abs/2202.03852}
+Armillotta, M. and K. Fokianos (2024). Count network autoregression. \emph{Journal of Time Series Analysis}, 45(4): 584--612.
 
-Armillotta, M., Tsagris, M. and Fokianos, K. (2022c). The R-package PNAR
-for modelling count network time series.
-\url{https://arxiv.org/abs/2211.02582}
+Armillotta, M., Tsagris, M. and Fokianos, K. (2024). Inference for Network Count Time Series with the R Package PNAR. \emph{The R Journal}, 15/4: 255--269.
 
 Brent, R. (1973) Algorithms for Minimization without Derivatives.
 Prentice-Hall, Englewood Cliffs N.J.

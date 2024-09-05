@@ -56,8 +56,11 @@ with their values, for each lag order.
 }
 
 \references{
-Armillotta, M. and K. Fokianos (2022). Poisson network autoregression.
-\url{https://arxiv.org/abs/2104.06296}
+Armillotta, M. and K. Fokianos (2023). Nonlinear network autoregression. \emph{Annals of Statistics}, 51(6): 2526--2552.
+
+Armillotta, M. and K. Fokianos (2024). Count network autoregression. \emph{Journal of Time Series Analysis}, 45(4): 584--612.
+
+Armillotta, M., Tsagris, M. and Fokianos, K. (2024). Inference for Network Count Time Series with the R Package PNAR. \emph{The R Journal}, 15/4: 255--269.
 }
 
 \author{

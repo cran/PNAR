@@ -46,7 +46,7 @@ sum of elements over the rows equals one.
 
 \references{
 Faust, K. and S. Wasserman (1992). Blockmodels: Interpretation and evaluation.
-\emph{Social Networks}, 14, 5-61.
+\emph{Social Networks}, 14, 5--61.
 }
 
 \seealso{

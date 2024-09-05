@@ -39,7 +39,7 @@ maximum sum of elements over the rows equals one.
 
 \references{
 Erdos, P. and A. Renyi (1959). On random graphs.
-\emph{Publicationes Mathematicae}, 6, 290-297.
+\emph{Publicationes Mathematicae}, 6, 290--297.
 }
 
 \author{

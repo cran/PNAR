@@ -37,16 +37,7 @@ The functions print the results of the function \code{\link{score_test_nonlinpq_
 }
 
 \references{
-Armillotta, M. and K. Fokianos (2022a). Poisson network autoregression.
-\url{https://arxiv.org/abs/2104.06296}
-
-Armillotta, M. and K. Fokianos (2022b). Testing linearity for network
-autoregressive models.
-\url{https://arxiv.org/abs/2202.03852}
-
-Armillotta, M., Tsagris, M. and Fokianos, K. (2022c). The R-package PNAR
-for modelling count network time series.
-\url{https://arxiv.org/abs/2211.02582}
+Armillotta, M., Tsagris, M. and Fokianos, K. (2024). Inference for Network Count Time Series with the R Package PNAR. \emph{The R Journal}, 15/4: 255--269.
 }
 
 \author{

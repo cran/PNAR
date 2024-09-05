@@ -17,7 +17,7 @@ Clark and Dixon (2021), available at \url{https://github.com/nick3703/Chicago-Da
 }
 \references{
 Clark, N. J. and P. M. Dixon (2021). A class of spatially correlated
-self-exciting statistical models. \emph{Spatial Statistics}, 43, 1-18.
+self-exciting statistical models. \emph{Spatial Statistics}, 43, 1--18.
 }
 \seealso{
 \code{\link{crime_W}, \link{lin_estimnarpq}, \link{log_lin_estimnarpq}
