@@ -13,15 +13,15 @@ Armillotta, M. and K. Fokianos (2023). Nonlinear network autoregression. \emph{A
 
 Armillotta, M. and K. Fokianos (2024). Count network autoregression. \emph{Journal of Time Series Analysis}, 45(4): 584--612.
 
-Armillotta, M., Tsagris, M. and Fokianos, K. (2024). Inference for Network Count Time Series with the R Package PNAR. \emph{The R Journal}, 15/4: 255--269.
+Armillotta, M., Tsagris, M. and Fokianos, K. (2023). Inference for Network Count Time Series with the R Package PNAR. \emph{The R Journal}, 15/4: 255--269.
 }
 
 \details{
 \tabular{ll}{
 Package: \tab PNAR\cr
 Type: \tab Package\cr
-Version: \tab 1.7\cr
-Date: \tab 2024-09-05\cr
+Version: \tab 1.8\cr
+Date: \tab 2026-03-27\cr
 License: \tab GPL(>=2)\cr
 }
 }
@@ -35,7 +35,7 @@ Armillotta, M. and K. Fokianos (2024). Count network autoregression. \emph{Journ
 
 Armillotta, M. and K. Fokianos (2023). Nonlinear network autoregression. \emph{Annals of Statistics}, 51(6): 2526--2552.
 
-Armillotta, M., Tsagris, M. and Fokianos, K. (2024). Inference for Network Count Time Series with the R Package PNAR. \emph{The R Journal}, 15/4: 255--269.
+Armillotta, M., Tsagris, M. and Fokianos, K. (2023). Inference for Network Count Time Series with the R Package PNAR. \emph{The R Journal}, 15/4: 255--269.
 }
 
 \note{

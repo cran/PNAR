@@ -6,12 +6,12 @@ rcopula <- function(n, N, copula = "gaussian", corrtype = "equicorrelation", rho
 
       if ( copula == "gaussian" ) {
         #Rfast::matrnorm(n, N, seed = seed)
-        z <- matrix( rnorm(n * N), ncol = N )
+        z <- rangen::Rnorm.mat(n, N)
         z <- z %*% cholR
         u <- pnorm(z)
       } else if ( copula == "t" ) {
         #z <- Rfast::matrnorm(n, N, seed = seed)
-        z <- matrix( rnorm(n * N), ncol = N )
+        z <- rangen::Rnorm.mat(n, N)
         w <- sqrt( dof / rchisq(n, dof) )
         z <- w * (z %*% cholR)
         u <- pt(z, dof)
@@ -29,11 +29,11 @@ rcopula <- function(n, N, copula = "gaussian", corrtype = "equicorrelation", rho
 
       if ( copula == "gaussian" ) {
         #z <- Rfast::rmvnorm(n, numeric(N), R, seed = seed)
-        z <- matrix( rnorm(n * N), ncol = N) %*% chol(R)
+        z <- rangen::Rnorm.mat(n, N) %*% chol(R)
         u <- pnorm(z)
       } else if ( copula == "t" ) {
         #z <- Rfast::rmvt(n, numeric(N), R, v = dof)
-        z <- matrix( rnorm(n * N), ncol = N )
+        z <- rangen::Rnorm.mat(n, N)
         w <- sqrt( dof / rchisq(n, dof))
         z <- w * ( z %*% chol(R) )
         u <- pt(z, dof)
@@ -43,7 +43,7 @@ rcopula <- function(n, N, copula = "gaussian", corrtype = "equicorrelation", rho
 
   } else {  ## else copula is "clayton"
     vi <- rgamma(n, 1/rho, 1)
-    z <- matrix( runif(n * N), ncol = N )
+    z <- matrix( rangen::Runif(n * N), ncol = N )
     z <- log(z) / ( - vi)
     u <- (1 + z)^(-1/rho)
   }

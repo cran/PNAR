@@ -22,6 +22,7 @@ import("doParallel")
 import("parallel")
 import("foreach")
 
+importFrom("rangen", Rnorm.mat, Runif)
 importFrom("igraph", sample_sbm, as_adjacency_matrix)
 importFrom("nloptr", nloptr)
 importFrom("Rfast", colCumSums, eachrow, rowsums, colsums, eachcol.apply,
@@ -29,8 +30,8 @@ importFrom("Rfast", colCumSums, eachrow, rowsums, colsums, eachcol.apply,
 importFrom("Rfast2", rowQuantile)
 importFrom("graphics", abline, mtext, points)
 importFrom("grDevices", dev.new)
-importFrom("stats", toeplitz, pchisq, pnorm, pt, rchisq, rgamma, runif,
-           optimise, model.matrix, glm, logLik, poisson, ts, rnorm)
+importFrom("stats", toeplitz, pchisq, pnorm, pt, rchisq, rgamma,
+           optimise, model.matrix, glm, logLik, poisson, ts)
 
 
 
